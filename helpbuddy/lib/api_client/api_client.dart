@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiClient {
-  final String baseUrl = 'http://twgoapp.com/api/api/';
+  final String baseUrl = 'http://twgoapp.com/api/api';
   final String authToken;
 
   ApiClient.auths() : authToken = '';
@@ -10,9 +10,9 @@ class ApiClient {
 
   Future<dynamic> authGet(String endpoint) async {
     final response = await http.get(
-      Uri.parse('$baseUrl/$endpoint'),
+      Uri.parse('$baseUrl/$endpoint/'),
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Content-Type': 'application/json',
       },
     );
     return _handleResponse(response);
@@ -20,9 +20,9 @@ class ApiClient {
 
   Future<dynamic> authPost(String endpoint, Map<String, dynamic> body) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/$endpoint'),
+      Uri.parse('$baseUrl/$endpoint/'),
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Content-Type': 'application/json',
       },
       body: jsonEncode(body),
     );
@@ -31,7 +31,7 @@ class ApiClient {
 
   Future<dynamic> get(String endpoint) async {
     final response = await http.get(
-      Uri.parse('$baseUrl/$endpoint'),
+      Uri.parse('$baseUrl/$endpoint/'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $authToken',
@@ -42,7 +42,7 @@ class ApiClient {
 
   Future<dynamic> post(String endpoint, Map<String, dynamic> body) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/$endpoint'),
+      Uri.parse('$baseUrl/$endpoint/'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $authToken',
@@ -56,7 +56,7 @@ class ApiClient {
     if (response.statusCode >= 200 && response.statusCode < 300) {
       return json.decode(response.body);
     } else {
-      throw Exception('Request failed with status: ${response.statusCode}');
+      return response.statusCode;
     }
   }
 }

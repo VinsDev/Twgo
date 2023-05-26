@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:helpbuddy/constants/dimensions.dart';
-import 'package:helpbuddy/super_admin/advertisement/advert_placement.dart';
 import 'package:helpbuddy/super_admin/create_admin/create_new_admin.dart';
 import 'package:helpbuddy/user/chat/models/user_model.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-class RightNavBar extends StatelessWidget {
-  const RightNavBar({Key? key}) : super(key: key);
+import '../../mymodels/myusermodels.dart';
 
+class RightNavBar extends StatefulWidget {
+  const RightNavBar({Key? key, required this.userInfo}) : super(key: key);
+  final UserInfo userInfo;
+
+  @override
+  State<RightNavBar> createState() => _RightNavBarState();
+}
+
+class _RightNavBarState extends State<RightNavBar> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -36,7 +43,7 @@ class RightNavBar extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Hello Oreoluwa',
+                    Text(widget.userInfo.info.firstName,
                         style: GoogleFonts.urbanist(
                             fontWeight: FontWeight.w600,
                             fontSize: 24 * factor,
@@ -44,7 +51,7 @@ class RightNavBar extends StatelessWidget {
 
                     //   SizedBox(height: 3,),
 
-                    Text('@Hello Oreoluwa',
+                    Text(widget.userInfo.info.email,
                         style: GoogleFonts.urbanist(
                             fontWeight: FontWeight.w200,
                             fontSize: 14 * factor,
@@ -71,7 +78,8 @@ class RightNavBar extends StatelessWidget {
                       builder: (BuildContext context) => const CreateAdmin()));
             },
             child: const SideBarCard2(
-                iconImage: Icons.person_add_alt_rounded, text: 'Create Admin')),
+                iconImage: Icons.person_add_alt_rounded,
+                text: 'Create Merchant')),
         InkWell(
           onTap: () => Navigator.pushNamed(
             context,
@@ -170,7 +178,10 @@ class RightNavBar extends StatelessWidget {
           child: InkWell(
             onTap: () {
               Navigator.pushNamedAndRemoveUntil(
-                  context, '/select-role', ModalRoute.withName('/select-role'));
+                context,
+                '/select-role',
+                (Route<dynamic> route) => false,
+              );
             },
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 30 * factor),

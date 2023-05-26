@@ -2,30 +2,28 @@ import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:helpbuddy/user/chat/models/user_model.dart';
-// import 'package:helpbuddy/user/state/user_state.dart';
 import 'package:helpbuddy/utils/constant/theme.dart';
 import 'package:helpbuddy/widget/button.dart';
 import 'package:helpbuddy/widget/input/outlineInput.dart';
-import 'package:helpbuddy/widget/loading.dart';
 
-import 'package:provider/provider.dart';
+import '../../mymodels/myusermodels.dart';
 
 class UserProfile extends StatefulWidget {
-  const UserProfile({Key? key}) : super(key: key);
+  const UserProfile({Key? key, required this.userInfo}) : super(key: key);
+
+  final UserInfo userInfo;
 
   @override
-  _UserProfileState createState() => _UserProfileState();
+  UserProfileState createState() => UserProfileState();
 }
 
-class _UserProfileState extends State<UserProfile> {
+class UserProfileState extends State<UserProfile> {
   TextEditingController? emailController;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool loginPasswordVisibility = false;
 
-  final bool _value = false;
-
-  TextEditingController? fullNameController;
+  TextEditingController? firstNameController;
   TextEditingController? lastNameController;
   TextEditingController? phoneController;
   TextEditingController? nationalityController;
@@ -36,29 +34,18 @@ class _UserProfileState extends State<UserProfile> {
 
   @override
   void initState() {
-    // UserState userState = Provider.of<UserState>(context, listen: false);
-    userModel = UserModel(
-        userId: '123',
-        userName: 'Ore',
-        userEmail: 'abc@123.com',
-        phoneNumber: '123',
-        gender: 'Male',
-        firstName: 'Doe',
-        lastName: 'John',
-        amount: '123',
-        userDpUrl: 'assets/images/Account Owner.png',
-        password: '123',
-        isOnline: true,
-        role: 'user',
-        nationality: 'Nigerian');
     super.initState();
-    emailController = TextEditingController(text: userModel?.userEmail);
+    emailController = TextEditingController(text: widget.userInfo.info.email);
 
-    fullNameController = TextEditingController(text: userModel!.userName);
-    lastNameController = TextEditingController();
-    phoneController = TextEditingController(text: userModel?.phoneNumber);
-    nationalityController = TextEditingController(text: userModel?.nationality);
-    genderController = TextEditingController(text: userModel?.gender);
+    firstNameController =
+        TextEditingController(text: widget.userInfo.info.firstName);
+    lastNameController =
+        TextEditingController(text: widget.userInfo.info.lastName);
+    phoneController =
+        TextEditingController(text: widget.userInfo.info.phoneNumber);
+    nationalityController =
+        TextEditingController(text: widget.userInfo.info.nationality);
+    genderController = TextEditingController(text: widget.userInfo.info.gender);
     passwordController = TextEditingController();
   }
 
@@ -127,7 +114,7 @@ class _UserProfileState extends State<UserProfile> {
                   height: 10,
                 ),
                 BlackOutlineInput(
-                  controller: fullNameController,
+                  controller: firstNameController,
                 ),
                 const SizedBox(
                   height: 20,

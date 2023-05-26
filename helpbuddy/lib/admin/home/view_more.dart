@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:helpbuddy/admin/more/profile/profile_settings.dart';
-import 'package:helpbuddy/authentication/logins/admin_login.dart';
+import 'package:helpbuddy/authentications/logins/admin_login.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 

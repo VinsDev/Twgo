@@ -246,8 +246,11 @@ class _SuperAdminMoreState extends State<SuperAdminMore> {
             ),
             InkWell(
                 onTap: () {
-                  Navigator.pushNamedAndRemoveUntil(context, '/select-role',
-                      ModalRoute.withName('/select-role'));
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    '/select-role',
+                    (Route<dynamic> route) => false,
+                  );
                 },
                 child: LogoutCard(text: 'logout', icon: MdiIcons.logout)),
             const Spacer()

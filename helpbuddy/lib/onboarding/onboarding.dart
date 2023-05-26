@@ -1,9 +1,12 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:helpbuddy/constants/dimensions.dart';
-import 'package:helpbuddy/onboarding/login_sign.dart';
+import 'package:helpbuddy/onboarding/action.dart';
+
+import 'package:http/http.dart' as http;
 
 class Onboarding extends StatefulWidget {
   const Onboarding({Key? key}) : super(key: key);

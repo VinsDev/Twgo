@@ -137,7 +137,7 @@ void bankModal(BuildContext context) {
       ),
       context: context,
       builder: (BuildContext context) {
-        return Container(
+        return SizedBox(
           height: MediaQuery.of(context).size.height * 0.7,
           child: Wrap(
             runAlignment: WrapAlignment.spaceBetween,

@@ -4,21 +4,17 @@ import 'package:helpbuddy/constants/dimensions.dart';
 import 'package:helpbuddy/user/chat/models/user_model.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
+import '../../mymodels/myusermodels.dart';
+
 class UserRightNavBar extends StatefulWidget {
-  const UserRightNavBar({Key? key}) : super(key: key);
+  const UserRightNavBar({Key? key, required this.userInfo}) : super(key: key);
+  final UserInfo userInfo;
 
   @override
   State<UserRightNavBar> createState() => _UserRightNavBarState();
 }
 
 class _UserRightNavBarState extends State<UserRightNavBar> {
-  UserModel? userModel;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -52,12 +48,12 @@ class _UserRightNavBarState extends State<UserRightNavBar> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Hello Oreoluwa',
+                      Text(widget.userInfo.info.firstName,
                           style: GoogleFonts.urbanist(
                               fontWeight: FontWeight.w600,
                               fontSize: 24 * factor,
                               color: Colors.black)),
-                      Text('@Hello Oreoluwa',
+                      Text(widget.userInfo.info.email,
                           style: GoogleFonts.urbanist(
                               fontWeight: FontWeight.w200,
                               fontSize: 14 * factor,
@@ -92,49 +88,7 @@ class _UserRightNavBarState extends State<UserRightNavBar> {
                 text: 'Notifications',
                 iconImage: 'assets/sidebar_svgs/notification.png',
               )),
-          /*       InkWell(
-              onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  '/user/side-bar/formA',
-                  arguments: {
-                    'userModel': UserModel(
-                        userId: '123',
-                        userName: 'FormA',
-                        userEmail: 'a@g',
-                        phoneNumber: '1',
-                        gender: 'Male',
-                        firstName: 'Omo',
-                        lastName: 'Lola',
-                        amount: '123',
-                        userDpUrl: 'assets/icons/support.png',
-                        password: '123',
-                        isOnline: true,
-                        role: 'user',
-                        nationality: 'NG'),
-                    'targetUser': UserModel(
-                        userId: '123',
-                        userName: 'FormA',
-                        userEmail: 'a@g',
-                        phoneNumber: '1',
-                        gender: 'Male',
-                        firstName: 'Omo',
-                        lastName: 'Lola',
-                        amount: '123',
-                        userDpUrl: 'assets/icons/support.png',
-                        password: '123',
-                        isOnline: true,
-                        role: 'user',
-                        nationality: 'NG'),
-                    'reason': 'formA'
-                  },
-                );
-              },
-              child: SideBarCard(
-                text: 'FormA',
-                iconImage: 'assets/sidebar_svgs/arrow-swap-horizontal.png',
-              )),
-     */
+
           InkWell(
               onTap: () {
                 Navigator.pushNamed(
@@ -192,8 +146,11 @@ class _UserRightNavBarState extends State<UserRightNavBar> {
             padding: EdgeInsets.symmetric(horizontal: 30 * factor),
             child: InkWell(
               onTap: () {
-                Navigator.pushNamedAndRemoveUntil(context, '/select-role',
-                    ModalRoute.withName('/select-role'));
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/select-role',
+                  (Route<dynamic> route) => false,
+                );
               },
               child: Container(
                 margin: EdgeInsets.symmetric(horizontal: 30 * factor),

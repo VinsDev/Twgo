@@ -108,8 +108,11 @@ class _AdminRightNavBarState extends State<AdminRightNavBar> {
             padding: EdgeInsets.symmetric(horizontal: 30 * factor),
             child: InkWell(
               onTap: () {
-                Navigator.pushNamedAndRemoveUntil(context, '/select-role',
-                    ModalRoute.withName('/select-role'));
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/select-role',
+                  (Route<dynamic> route) => false,
+                );
               },
               child: Container(
                 margin: EdgeInsets.symmetric(horizontal: 30 * factor),

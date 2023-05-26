@@ -1,16 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:helpbuddy/widget/button.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+
+import '../../api_client/api_client.dart';
+import '../../mymodels/myusermodels.dart';
 
 class ProjectRequests extends StatefulWidget {
-  const ProjectRequests({Key? key}) : super(key: key);
+  const ProjectRequests({Key? key, required this.token}) : super(key: key);
+  final String token;
 
   @override
   State<ProjectRequests> createState() => _ProjectRequestsState();
 }
 
 class _ProjectRequestsState extends State<ProjectRequests> {
+  List? projectsList;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchProjects(widget.token).then((response) {
+      setState(() {
+        var t = response;
+        projectsList = t.map((json) => Project.fromJson(json)).toList();
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,7 +69,6 @@ class _ProjectRequestsState extends State<ProjectRequests> {
 
 class ProjectsRequestsCard extends StatelessWidget {
   const ProjectsRequestsCard({Key? key, required this.data}) : super(key: key);
-  // QueryDocumentSnapshot<Object?>? data;
   final String data;
 
   @override
@@ -147,4 +161,9 @@ class ProjectsRequestsCard extends StatelessWidget {
       ),
     );
   }
+}
+
+fetchProjects(String token) async {
+  final response = await ApiClient(authToken: token).get('projects');
+  return response;
 }
