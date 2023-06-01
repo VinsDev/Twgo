@@ -1,19 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:helpbuddy/user/chat/models/user_model.dart';
-import 'package:helpbuddy/user/chat/screens/chat_room.dart';
 import 'package:helpbuddy/utils/constant/theme.dart';
 import 'package:helpbuddy/widget/button.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-class AdminNotification extends StatefulWidget {
-  const AdminNotification({Key? key}) : super(key: key);
+import '../../api_client/api_client.dart';
+import '../../mymodels/myusermodels.dart';
 
+class AdminNotification extends StatefulWidget {
+  const AdminNotification({Key? key, required this.token}) : super(key: key);
+  final String token;
   @override
   State<AdminNotification> createState() => _AdminNotificationState();
 }
 
 class _AdminNotificationState extends State<AdminNotification> {
+  List<Notifications> notifications = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchNotifications(widget.token).then((response) {
+      setState(() {
+        notifications =
+            response.map((json) => Notifications.fromJson(json)).toList();
+        isLoading = false;
+      });
+    }).catchError((error) {
+      setState(() {
+        isLoading = false;
+      });
+      // Handle the error here, e.g., show an error message
+      print('Error fetching projects: $error');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,121 +55,17 @@ class _AdminNotificationState extends State<AdminNotification> {
         title: Text('Notification', style: ConstantTheme().bigBlueStyle),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatRoom(
-                          userModel: UserModel(
-                              userId: '123',
-                              userName: 'Omolola',
-                              userEmail: 'a@g',
-                              phoneNumber: '1',
-                              gender: 'Male',
-                              firstName: 'Omo',
-                              lastName: 'Lola',
-                              amount: '123',
-                              userDpUrl: 'assets/images/Account Owner.png',
-                              password: '123',
-                              isOnline: true,
-                              role: 'user',
-                              nationality: 'NG'),
-                          targetUser: UserModel(
-                              userId: '123',
-                              userName: 'Omolola',
-                              userEmail: 'a@g',
-                              phoneNumber: '1',
-                              gender: 'Male',
-                              firstName: 'Omo',
-                              lastName: 'Lola',
-                              amount: '123',
-                              userDpUrl: 'assets/images/Account Owner.png',
-                              password: '123',
-                              isOnline: true,
-                              role: 'user',
-                              nationality: 'NG')),
-                    ));
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              padding: const EdgeInsets.only(top: 20),
+              itemCount: notifications.length,
+              itemBuilder: (BuildContext context, int index) {
+                return NotificationCard(
+                  item: notifications[index],
+                );
               },
-              child: NotificationCard()),
-          InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatRoom(
-                          userModel: UserModel(
-                              userId: '123',
-                              userName: 'Omolola',
-                              userEmail: 'a@g',
-                              phoneNumber: '1',
-                              gender: 'Male',
-                              firstName: 'Omo',
-                              lastName: 'Lola',
-                              amount: '123',
-                              userDpUrl: 'assets/images/Account Owner.png',
-                              password: '123',
-                              isOnline: true,
-                              role: 'user',
-                              nationality: 'NG'),
-                          targetUser: UserModel(
-                              userId: '123',
-                              userName: 'Omolola',
-                              userEmail: 'a@g',
-                              phoneNumber: '1',
-                              gender: 'Male',
-                              firstName: 'Omo',
-                              lastName: 'Lola',
-                              amount: '123',
-                              userDpUrl: 'assets/images/Account Owner.png',
-                              password: '123',
-                              isOnline: true,
-                              role: 'user',
-                              nationality: 'NG')),
-                    ));
-              },
-              child: NotificationCard()),
-          InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatRoom(
-                          userModel: UserModel(
-                              userId: '123',
-                              userName: 'Omolola',
-                              userEmail: 'a@g',
-                              phoneNumber: '1',
-                              gender: 'Male',
-                              firstName: 'Omo',
-                              lastName: 'Lola',
-                              amount: '123',
-                              userDpUrl: 'assets/images/Account Owner.png',
-                              password: '123',
-                              isOnline: true,
-                              role: 'user',
-                              nationality: 'NG'),
-                          targetUser: UserModel(
-                              userId: '123',
-                              userName: 'Omolola',
-                              userEmail: 'a@g',
-                              phoneNumber: '1',
-                              gender: 'Male',
-                              firstName: 'Omo',
-                              lastName: 'Lola',
-                              amount: '123',
-                              userDpUrl: 'assets/images/Account Owner.png',
-                              password: '123',
-                              isOnline: true,
-                              role: 'user',
-                              nationality: 'NG')),
-                    ));
-              },
-              child: NotificationCard())
-        ],
-      ),
+            ),
     );
   }
 
@@ -263,11 +181,8 @@ class _AdminNotificationState extends State<AdminNotification> {
 }
 
 class NotificationCard extends StatelessWidget {
-  NotificationCard({Key? key, this.mainText, this.dateText, this.secText})
-      : super(key: key);
-  String? mainText;
-  String? secText;
-  String? dateText;
+  NotificationCard({Key? key, required this.item}) : super(key: key);
+  final Notifications item;
 
   @override
   Widget build(BuildContext context) {
@@ -309,11 +224,14 @@ class NotificationCard extends StatelessWidget {
                     const SizedBox(
                       height: 10,
                     ),
-                    Text('You have a message from support',
-                        style: GoogleFonts.urbanist(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12,
-                            color: const Color(0xff686868))),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.6,
+                      child: Text(item.details,
+                          style: GoogleFonts.urbanist(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                              color: const Color(0xff686868))),
+                    ),
                     const SizedBox(
                       height: 10,
                     ),
@@ -354,4 +272,9 @@ class NotificationCard extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<List<dynamic>> fetchNotifications(String token) async {
+  final response = await ApiClient(authToken: token).get('notifications');
+  return response;
 }

@@ -73,7 +73,8 @@ class _UserDashboardState extends State<UserDashboard> {
                                 InkWell(
                                   onTap: () {
                                     Navigator.pushNamed(
-                                        context, '/user/notification');
+                                        context, '/user/notification',
+                                        arguments: {"token": widget.token});
                                   },
                                   child: Container(
                                     height: 40 * factor,

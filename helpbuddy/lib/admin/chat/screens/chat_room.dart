@@ -9,10 +9,8 @@ import '../models/user_model.dart';
 Uuid uuid = const Uuid();
 
 class ChatRoom extends StatefulWidget {
-//  final ChatRoomModel? chatRoom;
   const ChatRoom(
       {Key? key,
-      //required this.chatRoom,
       required this.userModel,
       required this.targetUser,
       this.reason})

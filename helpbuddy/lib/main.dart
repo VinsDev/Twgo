@@ -7,7 +7,6 @@ import 'package:helpbuddy/admin/home/project_requests.dart';
 import 'package:helpbuddy/admin/home/view_more.dart';
 import 'package:helpbuddy/admin/messages/messages.dart';
 import 'package:helpbuddy/admin/more/profile/profile.dart';
-import 'package:helpbuddy/admin/notification/notification.dart';
 import 'package:helpbuddy/admin/reviews/reviews.dart';
 import 'package:helpbuddy/mymodels/myusermodels.dart';
 import 'package:helpbuddy/super_admin/withdrawal/add_bank_account.dart';
@@ -97,7 +96,7 @@ class MyApp extends StatelessWidget {
 
           // User Routes ...
           '/user/dashboard': (context) => dash(context),
-          '/user/notification': (context) => const UserNotification(),
+          '/user/notification': (context) => notifications(context),
           '/user/profile': (context) => prof(context),
           '/user/add-balance/make-payment': (context) => const MakePayments(),
           '/user/history': (context) => history(context),
@@ -107,22 +106,21 @@ class MyApp extends StatelessWidget {
           '/user/project/chat': (context) => chat(context),
           '/user/get-help': (context) => chat(context),
           '/user/side-bar/messages': (context) => const UserMessages(),
-          '/user/side-bar/notification': (context) => const UserNotification(),
+          '/user/side-bar/notification': (context) => notifications(context),
           '/user/side-bar/formA': (context) => chat(context),
           '/user/side-bar/get-to-work': (context) => chat(context),
           '/user/side-bar/profile': (context) => prof(context),
 
           // Admin Routes ...
           '/admin/dashboard': (context) => dashA(context),
-          '/admin/notification': (context) => const AdminNotification(),
+          '/admin/notification': (context) => notificationsA(context),
           '/admin/profile': (context) => const AdminProfile(),
-          '/admin/project-requests': (context) => const ProjectRequests(),
+          '/admin/project-requests': (context) => projectRequests(context),
           '/admin/history': (context) => const RequestHistory(),
           '/admin/reviews': (context) => const Reviews(),
           '/admin/more': (context) => const ViewMore(),
           '/admin/side-bar/messages': (context) => const AdminMessages(),
-          '/admin/side-bar/notification': (context) =>
-              const AdminNotification(),
+          '/admin/side-bar/notification': (context) => notificationsA(context),
           '/admin/side-bar/profile': (context) => const AdminProfile(),
 
           // Super Admin Routes ...
@@ -149,6 +147,34 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget notifications(BuildContext ctx) {
+  return Builder(
+    builder: (context) {
+      // Extract the required parameters from the route settings arguments
+      final args =
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      final token = args['token'] as String;
+
+      // Return the ChatRoom widget with the required parameters
+      return UserNotification(token: token);
+    },
+  );
+}
+
+Widget notificationsA(BuildContext ctx) {
+  return Builder(
+    builder: (context) {
+      // Extract the required parameters from the route settings arguments
+      final args =
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      final token = args['token'] as String;
+
+      // Return the ChatRoom widget with the required parameters
+      return UserNotification(token: token);
+    },
+  );
 }
 
 Widget chat(BuildContext ctx) {
@@ -196,6 +222,21 @@ Widget historyDetails(BuildContext ctx) {
 
       // Return the ChatRoom widget with the required parameters
       return HistoryDetail(token: token, project: project);
+    },
+  );
+}
+
+Widget projectRequests(BuildContext ctx) {
+  return Builder(
+    builder: (context) {
+      // Extract the required parameters from the route settings arguments
+      final args =
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      final token = args['token'] as String;
+      final uid = args['uid'] as String;
+
+      // Return the ChatRoom widget with the required parameters
+      return ProjectRequests(token: token, uid: uid);
     },
   );
 }

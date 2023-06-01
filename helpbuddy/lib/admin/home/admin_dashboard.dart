@@ -72,7 +72,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
                                 InkWell(
                                   onTap: () {
                                     Navigator.pushNamed(
-                                        context, '/admin/notification');
+                                        context, '/admin/notification',
+                                        arguments: {'token': widget.token});
                                   },
                                   child: Container(
                                     height: 40 * factor,
@@ -147,7 +148,11 @@ class _AdminDashboardState extends State<AdminDashboard> {
                                 child: InkWell(
                               onTap: () {
                                 Navigator.pushNamed(
-                                    context, '/admin/project-requests');
+                                    context, '/admin/project-requests',
+                                    arguments: {
+                                      'token': widget.token,
+                                      'uid': userInfo!.info.id
+                                    });
                               },
                               child: DashboardCard(
                                   color: const Color(0xffEDF9E7),

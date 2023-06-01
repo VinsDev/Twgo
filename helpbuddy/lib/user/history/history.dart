@@ -13,49 +13,64 @@ class History extends StatefulWidget {
 }
 
 class _HistoryState extends State<History> {
-  List? projectsList;
+  List<Project> projectsList = [];
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
     fetchProjects(widget.token).then((response) {
       setState(() {
-        var t = response;
-        projectsList = t.map((json) => Project.fromJson(json)).toList();
+        projectsList = response.map((json) => Project.fromJson(json)).toList();
+        isLoading = false;
       });
+    }).catchError((error) {
+      setState(() {
+        isLoading = false;
+      });
+      // Handle the error here, e.g., show an error message
+      print('Error fetching projects: $error');
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          leading: InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: const Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
-              size: 16,
-            ),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: InkWell(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: const Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black,
+            size: 16,
           ),
-          title: Text('History',
-              style: GoogleFonts.urbanist(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 14,
-                  color: Colors.black)),
-          centerTitle: true,
         ),
-        body: projectsList == null
-            ? const Center(child: CircularProgressIndicator())
-            : ListView.builder(
-                padding: const EdgeInsets.only(top: 20),
-                itemCount: projectsList!.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return HistoryCard(item: projectsList![index], token: widget.token,);
-                }));
+        title: Text(
+          'History',
+          style: GoogleFonts.urbanist(
+            fontWeight: FontWeight.w700,
+            fontSize: 14,
+            color: Colors.black,
+          ),
+        ),
+        centerTitle: true,
+      ),
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              padding: const EdgeInsets.only(top: 20),
+              itemCount: projectsList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return HistoryCard(
+                  item: projectsList[index],
+                  token: widget.token,
+                );
+              },
+            ),
+    );
   }
 }
 
@@ -68,8 +83,11 @@ class HistoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Navigator.pushNamed(context, "/user/history-detail",
-          arguments: {'token': token, 'project': item}),
+      onTap: () => Navigator.pushNamed(
+        context,
+        "/user/history-detail",
+        arguments: {'token': token, 'project': item},
+      ),
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 10),
         padding: const EdgeInsets.only(right: 20, top: 10),
@@ -95,32 +113,39 @@ class HistoryCard extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(item.title,
-                        style: GoogleFonts.urbanist(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                            color: Colors.black)),
-                    const SizedBox(
-                      height: 10,
+                    Text(
+                      item.title,
+                      style: GoogleFonts.urbanist(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                        color: Colors.black,
+                      ),
                     ),
-                    Text('History Details',
-                        style: GoogleFonts.urbanist(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12,
-                            color: const Color(0xff686868))),
+                    const SizedBox(height: 10),
+                    Text(
+                      'History Details',
+                      style: GoogleFonts.urbanist(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                        color: const Color(0xff686868),
+                      ),
+                    ),
                   ],
-                )
+                ),
               ],
             ),
             Container(
               decoration: const BoxDecoration(color: Color(0xffD9FFEF)),
               child: Padding(
                 padding: const EdgeInsets.all(5.0),
-                child: Text(item.status,
-                    style: GoogleFonts.urbanist(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                        color: const Color(0xff006C3F))),
+                child: Text(
+                  item.status,
+                  style: GoogleFonts.urbanist(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                    color: const Color(0xff006C3F),
+                  ),
+                ),
               ),
             ),
           ],
@@ -130,7 +155,7 @@ class HistoryCard extends StatelessWidget {
   }
 }
 
-fetchProjects(String token) async {
-  final response = await ApiClient(authToken: token).get('projects/user/');
+Future<List<dynamic>> fetchProjects(String token) async {
+  final response = await ApiClient(authToken: token).get('projects/user');
   return response;
 }

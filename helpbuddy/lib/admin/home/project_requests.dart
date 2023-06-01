@@ -3,26 +3,36 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../api_client/api_client.dart';
 import '../../mymodels/myusermodels.dart';
+import '../../utils/toasts.dart';
 
 class ProjectRequests extends StatefulWidget {
-  const ProjectRequests({Key? key, required this.token}) : super(key: key);
+  const ProjectRequests({Key? key, required this.token, required this.uid})
+      : super(key: key);
   final String token;
+  final String uid;
 
   @override
   State<ProjectRequests> createState() => _ProjectRequestsState();
 }
 
 class _ProjectRequestsState extends State<ProjectRequests> {
-  List? projectsList;
+  List<Project> projectsList = [];
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
     fetchProjects(widget.token).then((response) {
       setState(() {
-        var t = response;
-        projectsList = t.map((json) => Project.fromJson(json)).toList();
+        projectsList = response.map((json) => Project.fromJson(json)).toList();
+        isLoading = false;
       });
+    }).catchError((error) {
+      setState(() {
+        isLoading = false;
+      });
+      // Handle the error here, e.g., show an error message
+      print('Error fetching projects: $error');
     });
   }
 
@@ -48,28 +58,45 @@ class _ProjectRequestsState extends State<ProjectRequests> {
                   color: Colors.black)),
           centerTitle: true,
         ),
-        body: ListView.builder(
-            padding: const EdgeInsets.only(top: 20),
-            itemCount: 10,
-            itemBuilder: (BuildContext context, int int) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const ProjectsRequestsCard(data: 'abc@hotmail.com'),
-                  Container(
-                    width: double.maxFinite,
-                    height: 1,
-                    color: Colors.grey,
-                  )
-                ],
-              );
-            }));
+        body: isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : ListView.builder(
+                padding: const EdgeInsets.only(top: 20),
+                itemCount: projectsList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ProjectsRequestsCard(
+                        item: projectsList[index],
+                        token: widget.token,
+                        uid: widget.uid,
+                      ),
+                      Container(
+                        width: double.maxFinite,
+                        height: 1,
+                        color: Colors.grey,
+                      )
+                    ],
+                  );
+                }));
   }
 }
 
-class ProjectsRequestsCard extends StatelessWidget {
-  const ProjectsRequestsCard({Key? key, required this.data}) : super(key: key);
-  final String data;
+class ProjectsRequestsCard extends StatefulWidget {
+  const ProjectsRequestsCard(
+      {Key? key, required this.item, required this.token, required this.uid})
+      : super(key: key);
+  final Project item;
+  final String token;
+  final String uid;
+
+  @override
+  State<ProjectsRequestsCard> createState() => _ProjectsRequestsCardState();
+}
+
+class _ProjectsRequestsCardState extends State<ProjectsRequestsCard> {
+  List? list;
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +114,7 @@ class ProjectsRequestsCard extends StatelessWidget {
                 color: const Color.fromARGB(255, 116, 116, 116),
                 fontSize: 14,
               )),
-          Text('Intensity of sunlight',
+          Text(widget.item.title,
               style: GoogleFonts.plusJakartaSans(
                 fontWeight: FontWeight.w500,
                 // color: const Color(0xff2781E1),
@@ -107,7 +134,7 @@ class ProjectsRequestsCard extends StatelessWidget {
           const SizedBox(
             height: 8,
           ),
-          Text('£300',
+          Text('£${widget.item.budget}',
               style: GoogleFonts.plusJakartaSans(
                 fontWeight: FontWeight.w500,
                 // color: const Color(0xff2781E1),
@@ -124,7 +151,7 @@ class ProjectsRequestsCard extends StatelessWidget {
           const SizedBox(
             height: 8,
           ),
-          Text('Posted 1 minute ago',
+          Text('Posted ${widget.item.deliveryDate}',
               style: GoogleFonts.plusJakartaSans(
                 fontWeight: FontWeight.w400,
                 // color: const Color(0xff2781E1),
@@ -138,7 +165,25 @@ class ProjectsRequestsCard extends StatelessWidget {
             children: [
               Expanded(child: Container()),
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  acceptProject(widget.token, widget.item.id).then((response) {
+                    if (response is num) {
+                      showSnackBar(context,
+                          "Something happened. Try again later [$response]");
+                    } else {
+                      if (response['message'] != null &&
+                          response['message'].isNotEmpty) {
+                        showSuccessSnackBar(
+                            context, "Project accepted successfully");
+                        Future.delayed(const Duration(seconds: 2), () {
+                          Navigator.pop(context);
+                        });
+                      } else {
+                        showSnackBar(context, "Something happened. Try again.");
+                      }
+                    }
+                  });
+                },
                 child: Container(
                   padding:
                       const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
@@ -163,7 +208,22 @@ class ProjectsRequestsCard extends StatelessWidget {
   }
 }
 
-fetchProjects(String token) async {
+Future<List<dynamic>> fetchProjects(String token) async {
   final response = await ApiClient(authToken: token).get('projects');
+  return response;
+}
+
+acceptProject(String token, int id) async {
+  final response =
+      await ApiClient(authToken: token).post('projects/accept/$id', {});
+  return response;
+}
+
+createConversation(String token, int userId, partnerId) async {
+  final response =
+      await ApiClient(authToken: token).post('conversations/create', {
+    "participants": [userId, partnerId],
+    "content": "Project conversation"
+  });
   return response;
 }

@@ -67,7 +67,6 @@ class UserInfo {
   }
 }
 
-
 class Project {
   final int id;
   final String title;
@@ -77,7 +76,7 @@ class Project {
   final String serviceType;
   final String deliveryDate;
   final String user;
-  final int userId;
+  final int? userId;
   final String? admin;
   final String status;
 
@@ -109,5 +108,50 @@ class Project {
       admin: json['admin'],
       status: json['status'],
     );
+  }
+}
+
+class Notifications {
+  int id;
+  int userId;
+  String message;
+  String details;
+  bool isRead;
+  String createdAt;
+
+  Notifications({
+    required this.id,
+    required this.userId,
+    required this.message,
+    required this.details,
+    required this.isRead,
+    required this.createdAt,
+  });
+
+  factory Notifications.fromJson(Map<String, dynamic> json) {
+    return Notifications(
+      id: json['id'] as int,
+      userId: json['user'] as int,
+      message: json['message'] as String,
+      details: json['details'] as String,
+      isRead: json['is_read'] as bool,
+      createdAt: json['created_at'] as String,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'user': userId,
+      'message': message,
+      'details': details,
+      'is_read': isRead,
+      'created_at': createdAt,
+    };
+  }
+
+  @override
+  String toString() {
+    return message;
   }
 }
