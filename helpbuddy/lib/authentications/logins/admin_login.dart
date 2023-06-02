@@ -255,6 +255,9 @@ class _AdminLoginState extends State<AdminLogin> {
                                         if (response is num) {
                                           showSnackBar(context,
                                               "Invalid login credentials used. Try again");
+                                          setState(() {
+                                            sending = false;
+                                          });
                                         } else {
                                           if (response['success']) {
                                             showSuccessSnackBar(
@@ -270,6 +273,9 @@ class _AdminLoginState extends State<AdminLogin> {
                                           } else {
                                             showSnackBar(context,
                                                 "Wrong email or password used. Please try again");
+                                            setState(() {
+                                              sending = false;
+                                            });
                                           }
                                         }
                                       });
@@ -291,6 +297,6 @@ class _AdminLoginState extends State<AdminLogin> {
 
 verifyLogins(String email, String password) {
   final response = ApiClient.auths()
-      .authPost('login-admin', {'email': email, 'password': password});
+      .authPost('login-admin', {'email': email.toLowerCase(), 'password': password});
   return response;
 }

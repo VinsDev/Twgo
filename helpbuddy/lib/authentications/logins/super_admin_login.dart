@@ -253,6 +253,9 @@ class _SuperAdminLoginState extends State<SuperAdminLogin> {
                                         if (response is num) {
                                           showSnackBar(context,
                                               "Invalid login credentials used. Try again");
+                                          setState(() {
+                                            sending = false;
+                                          });
                                         } else {
                                           if (response['success']) {
                                             showSuccessSnackBar(
@@ -269,6 +272,9 @@ class _SuperAdminLoginState extends State<SuperAdminLogin> {
                                           } else {
                                             showSnackBar(context,
                                                 "Wrong email or password used. Please try again");
+                                            setState(() {
+                                              sending = false;
+                                            });
                                           }
                                         }
                                       });
@@ -290,6 +296,6 @@ class _SuperAdminLoginState extends State<SuperAdminLogin> {
 
 verifyLogins(String email, String password) {
   final response = ApiClient.auths()
-      .authPost('login-superadmin', {'email': email, 'password': password});
+      .authPost('login-superadmin', {'email': email.toLowerCase(), 'password': password});
   return response;
 }

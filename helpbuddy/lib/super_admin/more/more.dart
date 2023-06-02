@@ -11,17 +11,7 @@ class SuperAdminMore extends StatefulWidget {
 }
 
 class _SuperAdminMoreState extends State<SuperAdminMore> {
-  // final picker = ImagePicker();
-
-  /*  Future<void> getImageFromGallery() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      // Do something with the image file, such as displaying it in a widget.
-    } else {
-      // User canceled the picker
-    }
-  } */
+ 
 
   @override
   Widget build(BuildContext context) {

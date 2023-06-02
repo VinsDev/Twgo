@@ -250,6 +250,9 @@ class _UserLoginState extends State<UserLogin> {
                                         if (response is num) {
                                           showSnackBar(context,
                                               "Invalid login credentials used. Try again");
+                                          setState(() {
+                                            sending = false;
+                                          });
                                         } else {
                                           if (response['success']) {
                                             showSuccessSnackBar(
@@ -265,6 +268,9 @@ class _UserLoginState extends State<UserLogin> {
                                           } else {
                                             showSnackBar(context,
                                                 "Wrong email or password used. Please try again");
+                                            setState(() {
+                                              sending = false;
+                                            });
                                           }
                                         }
                                       });
@@ -285,7 +291,7 @@ class _UserLoginState extends State<UserLogin> {
 }
 
 verifyLogins(String email, String password) {
-  final response = ApiClient.auths()
-      .authPost('login-user', {'email': email, 'password': password});
+  final response = ApiClient.auths().authPost(
+      'login-user', {'email': email.toLowerCase(), 'password': password});
   return response;
 }

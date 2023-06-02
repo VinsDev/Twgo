@@ -41,6 +41,7 @@ import 'package:helpbuddy/user/project/project.dart';
 import 'package:provider/provider.dart';
 
 import 'authentications/logins/admin_login.dart';
+import 'super_admin/messages/messages.dart';
 import 'user/history/inside_history.dart';
 
 void main() async {
@@ -124,14 +125,15 @@ class MyApp extends StatelessWidget {
           '/super-admin/all-stats/transaction-stats': (context) =>
               const TransactionStat(),
           '/super-admin/all-stats/user-stats': (context) => const UserStat(),
-          '/super-admin/notification': (context) =>
-              const SuperAdminNotification(),
+          '/super-admin/notification': (context) => notificationsSA(context),
           '/super-admin/stats': (context) => const AdminStat(),
           '/super-admin/user-stats': (context) => const UserStat(),
           '/super-admin/all-stats': (context) => const AllStat(),
           '/super-admin/more': (context) => const SuperAdminMore(),
           '/super-admin/more/advert': (context) => const AdvertPlacement(),
           '/super-admin/more/settings': (context) => const SuperAdminSettings(),
+          '/super-admin/side-bar/messages': (context) =>
+              superAdminMessages(context),
         },
       ),
     );
@@ -174,6 +176,24 @@ Widget adminMessages(BuildContext ctx) {
   );
 }
 
+Widget superAdminMessages(BuildContext ctx) {
+  return Builder(
+    builder: (context) {
+      // Extract the required parameters from the route settings arguments
+      final args =
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      final token = args['token'] as String;
+      final uid = args['uid'] as int;
+
+      // Return the ChatRoom widget with the required parameters
+      return SuperAdminMessages(
+        token: token,
+        uid: uid,
+      );
+    },
+  );
+}
+
 Widget notifications(BuildContext ctx) {
   return Builder(
     builder: (context) {
@@ -198,6 +218,20 @@ Widget notificationsA(BuildContext ctx) {
 
       // Return the ChatRoom widget with the required parameters
       return UserNotification(token: token);
+    },
+  );
+}
+
+Widget notificationsSA(BuildContext ctx) {
+  return Builder(
+    builder: (context) {
+      // Extract the required parameters from the route settings arguments
+      final args =
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      final token = args['token'] as String;
+
+      // Return the ChatRoom widget with the required parameters
+      return SuperAdminNotification();
     },
   );
 }

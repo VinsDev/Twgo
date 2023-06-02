@@ -3,7 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:helpbuddy/constants/dimensions.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
+import '../../api_client/api_client.dart';
 import '../../mymodels/myusermodels.dart';
+import '../chat/screens/chat_room.dart';
 
 class UserRightNavBar extends StatefulWidget {
   const UserRightNavBar(
@@ -97,7 +99,21 @@ class _UserRightNavBarState extends State<UserRightNavBar> {
               )),
 
           InkWell(
-              onTap: () {},
+              onTap: () {
+                getWorkConversationId(widget.token).then((response) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatRoom(
+                          userId: widget.userInfo.info.id,
+                          partnerName: "Get Work",
+                          conversationId: response['conversation_id'],
+                          token: widget.token,
+                          support: true,
+                        ),
+                      ));
+                });
+              },
               child: SideBarCard(
                 text: 'Get Work',
                 iconImage: 'assets/sidebar_svgs/briefcase.png',
@@ -206,4 +222,10 @@ class SideBarCard extends StatelessWidget {
       ),
     );
   }
+}
+
+getWorkConversationId(String token) async {
+  final response =
+      await ApiClient(authToken: token).post('get-work-conversation', {});
+  return response;
 }

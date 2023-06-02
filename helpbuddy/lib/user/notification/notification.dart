@@ -56,15 +56,19 @@ class _UserNotificationState extends State<UserNotification> {
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              padding: const EdgeInsets.only(top: 20),
-              itemCount: notifications.length,
-              itemBuilder: (BuildContext context, int index) {
-                return NotificationCard(
-                  item: notifications[index],
-                );
-              },
-            ),
+          : notifications.isEmpty
+              ? const Center(
+                  child: Text('No notifications found'),
+                )
+              : ListView.builder(
+                  padding: const EdgeInsets.only(top: 20),
+                  itemCount: notifications.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return NotificationCard(
+                      item: notifications[index],
+                    );
+                  },
+                ),
     );
   }
 }

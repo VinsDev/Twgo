@@ -56,7 +56,10 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
           : Scaffold(
               key: _scaffoldKey,
 
-              drawer: RightNavBar(userInfo: userInfo!), //Drawer,
+              drawer: RightNavBar(
+                userInfo: userInfo!,
+                token: widget.token,
+              ), //Drawer,
               body: Container(
                 padding: EdgeInsets.all(20.0 * factor),
                 child: SingleChildScrollView(
@@ -76,7 +79,8 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                                 InkWell(
                                   onTap: () {
                                     Navigator.pushNamed(
-                                        context, '/super-admin/notification');
+                                        context, '/super-admin/notification',
+                                        arguments: {'token': widget.token});
                                   },
                                   child: Container(
                                     height: 40 * factor,

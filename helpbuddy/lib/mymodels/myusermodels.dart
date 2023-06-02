@@ -160,12 +160,13 @@ class Conversation {
   final int id;
   final DateTime createdAt;
   final List<Participant> participants;
+  final String title;
 
-  Conversation({
-    required this.id,
-    required this.createdAt,
-    required this.participants,
-  });
+  Conversation(
+      {required this.id,
+      required this.createdAt,
+      required this.participants,
+      required this.title});
 
   factory Conversation.fromJson(Map<String, dynamic> json) {
     return Conversation(
@@ -173,6 +174,7 @@ class Conversation {
       createdAt: DateTime.parse(json['created_at']),
       participants: List<Participant>.from(json['participants']
           .map((participant) => Participant.fromJson(participant))),
+      title: json['title'],
     );
   }
 }

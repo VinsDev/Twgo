@@ -7,8 +7,10 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import '../../mymodels/myusermodels.dart';
 
 class RightNavBar extends StatefulWidget {
-  const RightNavBar({Key? key, required this.userInfo}) : super(key: key);
+  const RightNavBar({Key? key, required this.userInfo, required this.token})
+      : super(key: key);
   final UserInfo userInfo;
+  final String token;
 
   @override
   State<RightNavBar> createState() => _RightNavBarState();
@@ -60,48 +62,69 @@ class _RightNavBarState extends State<RightNavBar> {
               ],
             ) //UserAccountDrawerHeader
             ), //DrawerHeader
-        InkWell(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: const SideBarCard(
-            iconImage: 'assets/sidebar_svgs/home.png',
-            text: 'Home',
+        Expanded(
+            child: SingleChildScrollView(
+          child: Column(
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: const SideBarCard(
+                  iconImage: 'assets/sidebar_svgs/home.png',
+                  text: 'Home',
+                ),
+              ),
+              InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                const CreateAdmin()));
+                  },
+                  child: const SideBarCard2(
+                      iconImage: Icons.person_add_alt_rounded,
+                      text: 'Create Merchant')),
+              InkWell(
+                onTap: () => Navigator.pushNamed(
+                    context, '/super-admin/notification',
+                    arguments: {'token': widget.token}),
+                child: const SideBarCard2(
+                    iconImage: Icons.notifications, text: 'Notification'),
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, '/super-admin/side-bar/messages',
+                      arguments: {
+                        'token': widget.token,
+                        'uid': widget.userInfo.info.id
+                      });
+                },
+                child: const SideBarCard(
+                  text: 'Messages',
+                  iconImage: 'assets/sidebar_svgs/messages.png',
+                ),
+              ),
+              InkWell(
+                onTap: () {},
+                child: const SideBarCard2(
+                    iconImage: Icons.school, text: 'Educational Consults'),
+              ),
+              InkWell(
+                  onTap: () {},
+                  child: const SideBarCard2(
+                      iconImage: Icons.house, text: 'Accommodation')),
+              InkWell(
+                  onTap: () =>
+                      Navigator.pushNamed(context, '/super-admin/more/advert'),
+                  child: const SideBarCard2(
+                      iconImage: Icons.tv_rounded, text: 'Advert Placement')),
+            ],
           ),
-        ),
-        InkWell(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => const CreateAdmin()));
-            },
-            child: const SideBarCard2(
-                iconImage: Icons.person_add_alt_rounded,
-                text: 'Create Merchant')),
-        InkWell(
-          onTap: () => Navigator.pushNamed(
-            context,
-            '/admin/notification',
-          ),
-          child: const SideBarCard2(
-              iconImage: Icons.notifications, text: 'Notification'),
-        ),
-        InkWell(
-          onTap: () {},
-          child: const SideBarCard2(
-              iconImage: Icons.school, text: 'Educational Consults'),
-        ),
-        InkWell(
-            onTap: () {}, child: const SideBarCard2(
-                iconImage: Icons.house, text: 'Accommodation')),
-        InkWell(
-            onTap: () =>
-                Navigator.pushNamed(context, '/super-admin/more/advert'),
-            child: const SideBarCard2(
-                iconImage: Icons.tv_rounded, text: 'Advert Placement')),
-        const Spacer(
-          flex: 2,
+        )),
+        const SizedBox(
+          height: 8,
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 30 * factor),
@@ -140,7 +163,9 @@ class _RightNavBarState extends State<RightNavBar> {
             ),
           ),
         ),
-        const Spacer()
+        const SizedBox(
+          height: 8,
+        ),
       ]),
     );
   }

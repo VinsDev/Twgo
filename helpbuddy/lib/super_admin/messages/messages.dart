@@ -4,19 +4,19 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 
 import '../../api_client/api_client.dart';
 import '../../mymodels/myusermodels.dart';
-import '../chat/screens/chat_room.dart';
+import '../../user/chat/screens/chat_room.dart';
 
-class UserMessages extends StatefulWidget {
-  const UserMessages({Key? key, required this.token, required this.uid})
+class SuperAdminMessages extends StatefulWidget {
+  const SuperAdminMessages({Key? key, required this.token, required this.uid})
       : super(key: key);
   final String token;
   final int uid;
 
   @override
-  State<UserMessages> createState() => _AdminMessagesState();
+  State<SuperAdminMessages> createState() => _AdminMessagesState();
 }
 
-class _AdminMessagesState extends State<UserMessages> {
+class _AdminMessagesState extends State<SuperAdminMessages> {
   List<Conversation> conversations = [];
   bool isLoading = true;
 
@@ -98,12 +98,6 @@ class _AdminMessagesState extends State<UserMessages> {
                     padding: const EdgeInsets.only(top: 20),
                     itemCount: conversations.length,
                     itemBuilder: (BuildContext context, int index) {
-                      if (conversations[index].title == 'Get Work' ||
-                          conversations[index].title == 'Support' ||
-                          conversations[index].title == 'Accomondation Request' ||
-                          conversations[index].title == 'Edu Consult') {
-                        return Container();
-                      }
                       return MessageCard(
                         title: conversations[index].title,
                         participant:
@@ -159,6 +153,7 @@ class MessageCard extends StatelessWidget {
                 partnerName: participant.name,
                 conversationId: conversationId,
                 token: token,
+                support: true,
               ),
             ));
       },
@@ -194,7 +189,7 @@ class MessageCard extends StatelessWidget {
                         style: GoogleFonts.urbanist(
                             fontWeight: FontWeight.w600,
                             fontSize: 12,
-                            color: const Color.fromARGB(255, 143, 143, 143))),
+                            color: Color.fromARGB(255, 21, 12, 150))),
                     const SizedBox(
                       height: 2,
                     ),

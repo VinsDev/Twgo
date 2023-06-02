@@ -8,6 +8,7 @@ import 'package:helpbuddy/widget/button.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../../mymodels/myusermodels.dart';
+import '../chat/screens/chat_room.dart';
 
 class UserDashboard extends StatefulWidget {
   const UserDashboard({Key? key, required this.token}) : super(key: key);
@@ -244,7 +245,23 @@ class _UserDashboardState extends State<UserDashboard> {
                         children: [
                           Expanded(
                               child: InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              getSupportConversationId(widget.token)
+                                  .then((response) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ChatRoom(
+                                        userId: userInfo!.info.id,
+                                        partnerName: "Get Help",
+                                        conversationId:
+                                            response['conversation_id'],
+                                        token: widget.token,
+                                        support: true,
+                                      ),
+                                    ));
+                              });
+                            },
                             child: DashboardCard(
                                 color: const Color(0xffE7F7F8),
                                 firstText: '',
@@ -454,5 +471,11 @@ Widget balanceLabels(String label, String balance) {
 
 getUserInfo(String token) {
   final response = ApiClient(authToken: token).get('info');
+  return response;
+}
+
+getSupportConversationId(String token) async {
+  final response =
+      await ApiClient(authToken: token).post('support-conversation', {});
   return response;
 }

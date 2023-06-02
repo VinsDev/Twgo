@@ -11,19 +11,19 @@ import '../../../mymodels/myusermodels.dart';
 Uuid uuid = const Uuid();
 
 class ChatRoom extends StatefulWidget {
-  const ChatRoom({
-    Key? key,
-    required this.userId,
-    required this.partnerName,
-    required this.partnerId,
-    required this.conversationId,
-    required this.token,
-  }) : super(key: key);
+  const ChatRoom(
+      {Key? key,
+      required this.userId,
+      required this.partnerName,
+      required this.conversationId,
+      required this.token,
+      this.support})
+      : super(key: key);
   final int userId;
   final String partnerName;
-  final int partnerId;
   final int conversationId;
   final String token;
+  final bool? support;
 
   @override
   State<ChatRoom> createState() => _ChatRoomState();
@@ -335,46 +335,49 @@ class _ChatRoomState extends State<ChatRoom> {
                                     ])),
                           )
                         : Container(),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            if (clicked) {
-                              clicked = false;
-                            } else {
-                              clicked = true;
-                            }
-                          });
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.only(top: 8.0, right: 8.0),
-                          padding: const EdgeInsets.all(6.0),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF0053A1),
-                            borderRadius: BorderRadius.circular(40),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Text(
-                                'Options',
-                                style: TextStyle(color: Colors.white),
+                    widget.support ?? false
+                        ? Container()
+                        : Align(
+                            alignment: Alignment.topRight,
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  if (clicked) {
+                                    clicked = false;
+                                  } else {
+                                    clicked = true;
+                                  }
+                                });
+                              },
+                              child: Container(
+                                margin:
+                                    const EdgeInsets.only(top: 8.0, right: 8.0),
+                                padding: const EdgeInsets.all(6.0),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF0053A1),
+                                  borderRadius: BorderRadius.circular(40),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Text(
+                                      'Options',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    const SizedBox(
+                                      width: 2,
+                                    ),
+                                    Icon(
+                                      clicked
+                                          ? Icons.keyboard_arrow_up_rounded
+                                          : Icons.keyboard_arrow_down_rounded,
+                                      color: Colors.white,
+                                    )
+                                  ],
+                                ),
                               ),
-                              const SizedBox(
-                                width: 2,
-                              ),
-                              Icon(
-                                clicked
-                                    ? Icons.keyboard_arrow_up_rounded
-                                    : Icons.keyboard_arrow_down_rounded,
-                                color: Colors.white,
-                              )
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
                   ],
                 ))
           ],

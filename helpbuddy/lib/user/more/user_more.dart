@@ -13,7 +13,6 @@ class UserMore extends StatefulWidget {
 }
 
 class _UserMoreState extends State<UserMore> {
-
   @override
   void initState() {
     super.initState();
@@ -42,7 +41,8 @@ class _UserMoreState extends State<UserMore> {
                 color: Colors.black)),
         centerTitle: true,
       ),
-      body: Column(
+      body: ListView(
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20),
@@ -129,9 +129,7 @@ class _UserMoreState extends State<UserMore> {
             ),
           ]),
           InkWell(
-            onTap: () {
-  
-             },
+            onTap: () {},
             child: MoreCard(
               text: 'Customer Support',
               icon: MdiIcons.helpCircleOutline,
