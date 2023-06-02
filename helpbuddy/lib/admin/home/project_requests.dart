@@ -9,7 +9,7 @@ class ProjectRequests extends StatefulWidget {
   const ProjectRequests({Key? key, required this.token, required this.uid})
       : super(key: key);
   final String token;
-  final String uid;
+  final int uid;
 
   @override
   State<ProjectRequests> createState() => _ProjectRequestsState();
@@ -60,26 +60,30 @@ class _ProjectRequestsState extends State<ProjectRequests> {
         ),
         body: isLoading
             ? const Center(child: CircularProgressIndicator())
-            : ListView.builder(
-                padding: const EdgeInsets.only(top: 20),
-                itemCount: projectsList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ProjectsRequestsCard(
-                        item: projectsList[index],
-                        token: widget.token,
-                        uid: widget.uid,
-                      ),
-                      Container(
-                        width: double.maxFinite,
-                        height: 1,
-                        color: Colors.grey,
-                      )
-                    ],
-                  );
-                }));
+            : projectsList.isEmpty
+                ? const Center(
+                    child: Text('No projects requests found'),
+                  )
+                : ListView.builder(
+                    padding: const EdgeInsets.only(top: 20),
+                    itemCount: projectsList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ProjectsRequestsCard(
+                            item: projectsList[index],
+                            token: widget.token,
+                            uid: widget.uid,
+                          ),
+                          Container(
+                            width: double.maxFinite,
+                            height: 1,
+                            color: Colors.grey,
+                          )
+                        ],
+                      );
+                    }));
   }
 }
 
@@ -89,7 +93,7 @@ class ProjectsRequestsCard extends StatefulWidget {
       : super(key: key);
   final Project item;
   final String token;
-  final String uid;
+  final int uid;
 
   @override
   State<ProjectsRequestsCard> createState() => _ProjectsRequestsCardState();
@@ -175,8 +179,17 @@ class _ProjectsRequestsCardState extends State<ProjectsRequestsCard> {
                           response['message'].isNotEmpty) {
                         showSuccessSnackBar(
                             context, "Project accepted successfully");
-                        Future.delayed(const Duration(seconds: 2), () {
-                          Navigator.pop(context);
+                        createConversation(
+                                widget.token, widget.uid, response['user_id'])
+                            .then((res) {
+                          Future.delayed(const Duration(seconds: 2), () {
+                            Navigator.pushReplacementNamed(
+                                context, '/admin/side-bar/messages',
+                                arguments: {
+                                  'token': widget.token,
+                                  'uid': widget.uid
+                                });
+                          });
                         });
                       } else {
                         showSnackBar(context, "Something happened. Try again.");
@@ -219,10 +232,13 @@ acceptProject(String token, int id) async {
   return response;
 }
 
-createConversation(String token, int userId, partnerId) async {
+createConversation(String token, int userId, int partnerId) async {
   final response =
       await ApiClient(authToken: token).post('conversations/create', {
-    "participants": [userId, partnerId],
+    "participants": [
+      {"id": userId},
+      {"id": partnerId}
+    ],
     "content": "Project conversation"
   });
   return response;

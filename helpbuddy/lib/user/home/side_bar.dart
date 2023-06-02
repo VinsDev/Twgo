@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:helpbuddy/constants/dimensions.dart';
-import 'package:helpbuddy/user/chat/models/user_model.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../../mymodels/myusermodels.dart';
 
 class UserRightNavBar extends StatefulWidget {
-  const UserRightNavBar({Key? key, required this.userInfo}) : super(key: key);
+  const UserRightNavBar(
+      {Key? key,
+      required this.token,
+      required this.uid,
+      required this.userInfo})
+      : super(key: key);
+  final String token;
+  final int uid;
   final UserInfo userInfo;
-
   @override
   State<UserRightNavBar> createState() => _UserRightNavBarState();
 }
@@ -74,7 +79,8 @@ class _UserRightNavBarState extends State<UserRightNavBar> {
           ),
           InkWell(
               onTap: () {
-                Navigator.pushNamed(context, '/user/side-bar/messages');
+                Navigator.pushNamed(context, '/user/side-bar/messages',
+                    arguments: {'token': widget.token, 'uid': widget.uid});
               },
               child: SideBarCard(
                 text: 'Messages',
@@ -82,7 +88,8 @@ class _UserRightNavBarState extends State<UserRightNavBar> {
               )),
           InkWell(
               onTap: () {
-                Navigator.pushNamed(context, '/user/side-bar/notification');
+                Navigator.pushNamed(context, '/user/side-bar/notification',
+                    arguments: {'token': widget.token});
               },
               child: SideBarCard(
                 text: 'Notifications',
@@ -90,50 +97,15 @@ class _UserRightNavBarState extends State<UserRightNavBar> {
               )),
 
           InkWell(
-              onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  '/user/side-bar/get-to-work',
-                  arguments: {
-                    'userModel': UserModel(
-                        userId: '123',
-                        userName: 'Omolola',
-                        userEmail: 'a@g',
-                        phoneNumber: '1',
-                        gender: 'Male',
-                        firstName: 'Omo',
-                        lastName: 'Lola',
-                        amount: '123',
-                        userDpUrl: 'assets/images/Account Owner.png',
-                        password: '123',
-                        isOnline: true,
-                        role: 'user',
-                        nationality: 'NG'),
-                    'targetUser': UserModel(
-                        userId: '123',
-                        userName: 'Get to Work',
-                        userEmail: 'a@g',
-                        phoneNumber: '1',
-                        gender: 'Male',
-                        firstName: 'Omo',
-                        lastName: 'Lola',
-                        amount: '123',
-                        userDpUrl: 'assets/icons/support.png',
-                        password: '123',
-                        isOnline: true,
-                        role: 'user',
-                        nationality: 'NG'),
-                    'reason': 'get-to-work'
-                  },
-                );
-              },
+              onTap: () {},
               child: SideBarCard(
                 text: 'Get Work',
                 iconImage: 'assets/sidebar_svgs/briefcase.png',
               )),
           InkWell(
               onTap: () {
-                Navigator.pushNamed(context, '/user/side-bar/profile');
+                Navigator.pushNamed(context, '/user/side-bar/profile',
+                    arguments: {'info': widget.userInfo});
               },
               child: SideBarCard(
                 text: 'Profile',

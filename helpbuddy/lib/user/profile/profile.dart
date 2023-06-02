@@ -1,7 +1,6 @@
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:helpbuddy/user/chat/models/user_model.dart';
 import 'package:helpbuddy/utils/constant/theme.dart';
 import 'package:helpbuddy/widget/button.dart';
 import 'package:helpbuddy/widget/input/outlineInput.dart';
@@ -29,8 +28,6 @@ class UserProfileState extends State<UserProfile> {
   TextEditingController? nationalityController;
   TextEditingController? genderController;
   TextEditingController? passwordController;
-
-  UserModel? userModel;
 
   @override
   void initState() {
@@ -85,18 +82,20 @@ class UserProfileState extends State<UserProfile> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      alignment: Alignment.center,
-                      width: 120,
-                      height: 120,
-                      clipBehavior: Clip.antiAlias,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                      ),
-                      child: Image.network(
-                        'https://picsum.photos/seed/205/600',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                        alignment: Alignment.center,
+                        width: 120,
+                        height: 120,
+                        clipBehavior: Clip.antiAlias,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                        ),
+                        child: const CircleAvatar(
+                          radius: 40,
+                          child: Icon(
+                            Icons.person,
+                            size: 50,
+                          ),
+                        )),
                   ],
                 ),
                 const SizedBox(

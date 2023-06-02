@@ -52,7 +52,11 @@ class _AdminDashboardState extends State<AdminDashboard> {
           : Scaffold(
               key: _scaffoldKey,
 
-              drawer: const AdminRightNavBar(), //Drawer,
+              drawer: AdminRightNavBar(
+                token: widget.token,
+                uid: userInfo!.info.id,
+                userInfo: userInfo!,
+              ), //Drawer,
               body: SafeArea(
                 child: Container(
                   padding: EdgeInsets.all(20.0 * factor),
@@ -92,7 +96,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
                                 InkWell(
                                     onTap: () {
                                       Navigator.pushNamed(
-                                          context, '/admin/profile');
+                                          context, '/admin/profile',
+                                          arguments: {'info': userInfo});
                                     },
                                     child: Image.asset(
                                         'assets/images/Account Owner.png'))

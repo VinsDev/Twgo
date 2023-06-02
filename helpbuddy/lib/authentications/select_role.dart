@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:helpbuddy/constants/dimensions.dart';
-import 'package:helpbuddy/user/chat/models/user_model.dart';
 import 'package:helpbuddy/widget/button.dart';
 
 import '../exit_confirmation/exit_confirmation.dart';
@@ -21,7 +20,6 @@ class _SelectRoleState extends State<SelectRole> {
   late TextEditingController passwordController;
 
   bool selectRolePasswordVisibility = false;
-  UserModel? userModel;
 
   @override
   void initState() {

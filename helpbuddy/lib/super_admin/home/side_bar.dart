@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:helpbuddy/constants/dimensions.dart';
 import 'package:helpbuddy/super_admin/create_admin/create_new_admin.dart';
-import 'package:helpbuddy/user/chat/models/user_model.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../../mymodels/myusermodels.dart';
@@ -89,81 +88,12 @@ class _RightNavBarState extends State<RightNavBar> {
               iconImage: Icons.notifications, text: 'Notification'),
         ),
         InkWell(
-          onTap: () => Navigator.pushNamed(
-            context,
-            '/user/side-bar/get-to-work',
-            arguments: {
-              'userModel': UserModel(
-                  userId: '123',
-                  userName: 'Omolola',
-                  userEmail: 'a@g',
-                  phoneNumber: '1',
-                  gender: 'Male',
-                  firstName: 'Omo',
-                  lastName: 'Lola',
-                  amount: '123',
-                  userDpUrl: 'assets/images/Account Owner.png',
-                  password: '123',
-                  isOnline: true,
-                  role: 'user',
-                  nationality: 'NG'),
-              'targetUser': UserModel(
-                  userId: '123',
-                  userName: 'Educational Consult',
-                  userEmail: 'a@g',
-                  phoneNumber: '1',
-                  gender: 'Male',
-                  firstName: 'Omo',
-                  lastName: 'Lola',
-                  amount: '123',
-                  userDpUrl: 'assets/icons/support.png',
-                  password: '123',
-                  isOnline: true,
-                  role: 'user',
-                  nationality: 'NG'),
-              'reason': 'formA'
-            },
-          ),
+          onTap: () {},
           child: const SideBarCard2(
               iconImage: Icons.school, text: 'Educational Consults'),
         ),
         InkWell(
-            onTap: () => Navigator.pushNamed(
-                  context,
-                  '/user/side-bar/get-to-work',
-                  arguments: {
-                    'userModel': UserModel(
-                        userId: '123',
-                        userName: 'Omolola',
-                        userEmail: 'a@g',
-                        phoneNumber: '1',
-                        gender: 'Male',
-                        firstName: 'Omo',
-                        lastName: 'Lola',
-                        amount: '123',
-                        userDpUrl: 'assets/images/Account Owner.png',
-                        password: '123',
-                        isOnline: true,
-                        role: 'user',
-                        nationality: 'NG'),
-                    'targetUser': UserModel(
-                        userId: '123',
-                        userName: 'Accomondation Request',
-                        userEmail: 'a@g',
-                        phoneNumber: '1',
-                        gender: 'Male',
-                        firstName: 'Omo',
-                        lastName: 'Lola',
-                        amount: '123',
-                        userDpUrl: 'assets/icons/support.png',
-                        password: '123',
-                        isOnline: true,
-                        role: 'user',
-                        nationality: 'NG'),
-                    'reason': 'formA'
-                  },
-                ),
-            child: const SideBarCard2(
+            onTap: () {}, child: const SideBarCard2(
                 iconImage: Icons.house, text: 'Accommodation')),
         InkWell(
             onTap: () =>

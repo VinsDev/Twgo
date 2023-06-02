@@ -155,3 +155,61 @@ class Notifications {
     return message;
   }
 }
+
+class Conversation {
+  final int id;
+  final DateTime createdAt;
+  final List<Participant> participants;
+
+  Conversation({
+    required this.id,
+    required this.createdAt,
+    required this.participants,
+  });
+
+  factory Conversation.fromJson(Map<String, dynamic> json) {
+    return Conversation(
+      id: json['id'],
+      createdAt: DateTime.parse(json['created_at']),
+      participants: List<Participant>.from(json['participants']
+          .map((participant) => Participant.fromJson(participant))),
+    );
+  }
+}
+
+class Participant {
+  final int id;
+  final String name;
+
+  Participant({
+    required this.id,
+    required this.name,
+  });
+
+  factory Participant.fromJson(Map<String, dynamic> json) {
+    return Participant(
+      id: json['id'],
+      name: json['name'],
+    );
+  }
+}
+
+class Message {
+  int sender;
+  String content;
+  DateTime createdAt;
+
+  Message({
+    required this.sender,
+    required this.content,
+    required this.createdAt,
+  });
+
+  factory Message.fromJson(Map<String, dynamic> json) {
+    return Message(
+      sender: json['sender'],
+      content: json['content'],
+      createdAt: DateTime.parse(json['created_at']),
+    );
+  }
+}

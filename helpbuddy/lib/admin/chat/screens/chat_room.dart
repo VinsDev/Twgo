@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:helpbuddy/admin/chat/plagiarism/plagiarism.dart';
-import 'package:helpbuddy/user/chat/models/message_model.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
-import '../models/user_model.dart';
+import '../../../api_client/api_client.dart';
+import '../../../mymodels/myusermodels.dart';
 
 Uuid uuid = const Uuid();
 
 class ChatRoom extends StatefulWidget {
-  const ChatRoom(
-      {Key? key,
-      required this.userModel,
-      required this.targetUser,
-      this.reason})
-      : super(key: key);
-  final UserModel targetUser;
-  final UserModel userModel;
-  final String? reason;
+  const ChatRoom({
+    Key? key,
+    required this.userId,
+    required this.partnerName,
+    required this.partnerId,
+    required this.conversationId,
+    required this.token,
+  }) : super(key: key);
+  final int userId;
+  final String partnerName;
+  final int partnerId;
+  final int conversationId;
+  final String token;
 
   @override
   State<ChatRoom> createState() => _ChatRoomState();
@@ -28,31 +32,46 @@ class _ChatRoomState extends State<ChatRoom> {
   ValueNotifier<int> chatNotifierValue = ValueNotifier<int>(0);
   ScrollController scrollController = ScrollController();
 
+  List<Message> messages = [];
+  bool isLoading = true;
+
   @override
   void initState() {
-    messageController.text = '';
     super.initState();
+    getMessages(widget.token, widget.conversationId).then((response) {
+      setState(() {
+        messages = response.map((json) => Message.fromJson(json)).toList();
+        isLoading = false;
+      });
+    }).catchError((error) {
+      setState(() {
+        isLoading = false;
+      });
+      // Handle the error here, e.g., show an error message
+      print('Error fetching projects: $error');
+    });
+  }
+
+  getMess() {
+    getMessages(widget.token, widget.conversationId).then((response) {
+      if (mounted) {
+        setState(() {
+          messages = response.map((json) => Message.fromJson(json)).toList();
+        });
+        scrollController.animateTo(
+          scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
   }
 
   @override
   void dispose() {
     messageController.dispose();
+    scrollController.dispose();
     super.dispose();
-  }
-
-  Future<void> sendMessage() async {
-    String? message = messageController.text.trim();
-    messageController.clear();
-
-    if (message.isNotEmpty) {
-      MessageModel messageModel = MessageModel(
-        text: message,
-        messageId: uuid.v1(),
-        sender: widget.userModel.userId,
-        sentTime: DateTime.now(),
-        seen: false,
-      );
-    }
   }
 
   DateFormat timeFormat = DateFormat('hh:mm a');
@@ -79,41 +98,25 @@ class _ChatRoomState extends State<ChatRoom> {
                           color: Colors.black, size: 20),
                     ),
                   ),
-                  widget.targetUser.userDpUrl.toString().isNotEmpty
-                      ? CircleAvatar(
-                          backgroundImage:
-                              // NetworkImage(widget.targetUser.userDpUrl.toString()),
-                              Image.asset(
-                                      widget.targetUser.userDpUrl.toString())
-                                  .image,
-                        )
-                      : const CircleAvatar(
-                          backgroundColor: Colors.grey,
-                          child: Icon(Icons.person),
-                        ),
+                  const CircleAvatar(
+                    backgroundColor: Colors.grey,
+                    child: Icon(Icons.person),
+                  ),
                   const SizedBox(width: 15),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.targetUser.userName ?? 'User',
+                        widget.partnerName,
                         style: const TextStyle(color: Colors.black),
                       ),
-                      widget.targetUser.isOnline!
-                          ? const Text(
-                              'Online',
-                              style: TextStyle(
-                                color: Colors.green,
-                                fontSize: 12,
-                              ),
-                            )
-                          : const Text(
-                              'Offline',
-                              style: TextStyle(
-                                color: Colors.red,
-                                fontSize: 12,
-                              ),
-                            )
+                      const Text(
+                        'Online',
+                        style: TextStyle(
+                          color: Colors.green,
+                          fontSize: 12,
+                        ),
+                      )
                     ],
                   ),
                 ],
@@ -208,88 +211,92 @@ class _ChatRoomState extends State<ChatRoom> {
               child: ValueListenableBuilder<int>(
             valueListenable: chatNotifierValue,
             builder: (BuildContext context, int value, Widget? child) {
-              return ListView.builder(
-                shrinkWrap: true,
-                reverse: false,
-                controller: scrollController,
-                itemCount: t.length,
-                itemBuilder: (BuildContext context, int index) {
-                  MessageModel currentMessage = t[index];
-                  return Row(
-                    mainAxisAlignment:
-                        currentMessage.sender == widget.userModel.userId
-                            ? MainAxisAlignment.end
-                            : MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      InkWell(
-                        onLongPress: () async {},
-                        onDoubleTap: () async {
-                          // edit message
-                          if (messageController.text.isNotEmpty) {}
-                        },
-                        borderRadius: BorderRadius.circular(20),
-                        splashColor: Colors.green,
-                        child: Container(
-                          margin: const EdgeInsets.all(10),
-                          child: Column(
-                            crossAxisAlignment:
-                                currentMessage.sender == widget.userModel.userId
-                                    ? CrossAxisAlignment.end
-                                    : CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                constraints: const BoxConstraints(
-                                  maxWidth: 250,
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10,
-                                  horizontal: 10,
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: (currentMessage.sender ==
-                                          widget.userModel.userId)
-                                      ? const Color(0xffD2D4D8)
-                                      : const Color(0xffFFF0E6),
-                                ),
-                                child: Text(
-                                  currentMessage.text.toString(),
-                                  textAlign: currentMessage.sender ==
-                                          widget.userModel.userId
-                                      ? TextAlign.end
-                                      : TextAlign.start,
-                                  style: const TextStyle(
-                                    color: Color(0xff234C78),
-                                    fontSize: 14,
-                                  ),
+              chatNotifierValue.value != 0 ? getMess() : {};
+              return isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      reverse: false,
+                      controller: scrollController,
+                      itemCount: messages.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        Message currentMessage = messages[index];
+                        return Row(
+                          mainAxisAlignment:
+                              currentMessage.sender == widget.userId
+                                  ? MainAxisAlignment.end
+                                  : MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            InkWell(
+                              onLongPress: () async {},
+                              onDoubleTap: () async {
+                                // edit message
+                                if (messageController.text.isNotEmpty) {}
+                              },
+                              borderRadius: BorderRadius.circular(20),
+                              splashColor: Colors.green,
+                              child: Container(
+                                margin: const EdgeInsets.all(10),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      currentMessage.sender == widget.userId
+                                          ? CrossAxisAlignment.end
+                                          : CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      constraints: const BoxConstraints(
+                                        maxWidth: 250,
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 10,
+                                        horizontal: 10,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: (currentMessage.sender ==
+                                                widget.userId)
+                                            ? const Color(0xffD2D4D8)
+                                            : const Color(0xffFFF0E6),
+                                      ),
+                                      child: Text(
+                                        currentMessage.content,
+                                        textAlign: currentMessage.sender ==
+                                                widget.userId
+                                            ? TextAlign.end
+                                            : TextAlign.start,
+                                        style: const TextStyle(
+                                          color: Color(0xff234C78),
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      //  + ${DateTime.parse(currentMessage.sentTime.toString()).second} + ${DateTime.parse(currentMessage.sentTime.toString()).millisecond}
+                                      timeFormat
+                                          .format(currentMessage.createdAt),
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                //  + ${DateTime.parse(currentMessage.sentTime.toString()).second} + ${DateTime.parse(currentMessage.sentTime.toString()).millisecond}
-                                timeFormat.format(currentMessage.sentTime!),
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              );
+                            ),
+                          ],
+                        );
+                      },
+                    );
             },
           )),
           MessageInputField(
-            notifierRef: chatNotifierValue,
-            controller: scrollController,
-          )
+              notifierRef: chatNotifierValue,
+              conversationId: widget.conversationId,
+              token: widget.token)
         ],
       ),
     );
@@ -297,9 +304,14 @@ class _ChatRoomState extends State<ChatRoom> {
 }
 
 class MessageInputField extends StatefulWidget {
-  MessageInputField({required this.notifierRef, required this.controller});
+  MessageInputField(
+      {required this.notifierRef,
+      required this.conversationId,
+      required this.token});
   ValueNotifier<int> notifierRef;
-  ScrollController controller;
+  String token;
+  int conversationId;
+
   @override
   _MessageInputFieldState createState() => _MessageInputFieldState();
 }
@@ -317,22 +329,12 @@ class _MessageInputFieldState extends State<MessageInputField> {
   void _sendMessage() {
     if (_textEditingController.text.isNotEmpty) {
       // Implement your logic to send the message here
-      String message = _textEditingController.text;
-      t.add(MessageModel(
-          messageId: '123',
-          sender: '123',
-          text: message,
-          seen: true,
-          sentTime: DateTime.now()));
-
+      sendMessage(
+              widget.token, widget.conversationId, _textEditingController.text)
+          .then((response) {
+        widget.notifierRef.value++;
+      });
       // Update message ui ...
-      widget.notifierRef.value = t.length;
-
-      widget.controller.animateTo(
-        t.length * 80,
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-      );
 
       _textEditingController.clear();
       setState(() {
@@ -424,29 +426,15 @@ class _MessageInputFieldState extends State<MessageInputField> {
   }
 }
 
-List<MessageModel> t = [
-  MessageModel(
-      messageId: '123',
-      sender: 'Vincent',
-      text: 'Hi how can we help ...',
-      seen: true,
-      sentTime: DateTime.now()),
-  MessageModel(
-      messageId: '123',
-      sender: '123',
-      text: 'User support pls i need ...',
-      seen: true,
-      sentTime: DateTime.now()),
-  MessageModel(
-      messageId: '123',
-      sender: 'Vincent',
-      text: 'What do you need',
-      seen: true,
-      sentTime: DateTime.now()),
-  MessageModel(
-      messageId: '123',
-      sender: '123',
-      text: 'To complete my project.',
-      seen: true,
-      sentTime: DateTime.now()),
-];
+Future<List<dynamic>> getMessages(String token, int conversationId) async {
+  final response = await ApiClient(authToken: token)
+      .get('conversations/$conversationId/messages');
+  return response;
+}
+
+sendMessage(String token, int conversationId, String message) async {
+  final response = await ApiClient(authToken: token).post(
+      'conversations/send-message',
+      {"conversation_id": conversationId, "content": message});
+  return response;
+}

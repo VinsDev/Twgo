@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:helpbuddy/admin/more/profile/profile.dart';
 import 'package:helpbuddy/admin/more/profile/transaction_pin.dart';
-import 'package:helpbuddy/user/state/user_state.dart';
 import 'package:helpbuddy/utils/constant/theme.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:provider/provider.dart';
 
 class ProjectSettings extends StatefulWidget {
   const ProjectSettings({Key? key}) : super(key: key);
@@ -17,7 +14,6 @@ class ProjectSettings extends StatefulWidget {
 class _ProjectSettingsState extends State<ProjectSettings> {
   @override
   Widget build(BuildContext context) {
-    UserState state = Provider.of<UserState>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,

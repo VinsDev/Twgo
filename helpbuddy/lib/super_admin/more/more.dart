@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:helpbuddy/user/chat/models/user_model.dart';
 import 'package:helpbuddy/utils/constant/theme.dart';
-// import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class SuperAdminMore extends StatefulWidget {
@@ -91,122 +89,17 @@ class _SuperAdminMoreState extends State<SuperAdminMore> {
               height: 30,
             ),
             MoreCard(
-              text: 'Educational Consult',
-              icon: MdiIcons.schoolOutline,
-              destination: () => Navigator.pushNamed(
-                context,
-                '/user/side-bar/get-to-work',
-                arguments: {
-                  'userModel': UserModel(
-                      userId: '123',
-                      userName: 'Omolola',
-                      userEmail: 'a@g',
-                      phoneNumber: '1',
-                      gender: 'Male',
-                      firstName: 'Omo',
-                      lastName: 'Lola',
-                      amount: '123',
-                      userDpUrl: 'assets/images/Account Owner.png',
-                      password: '123',
-                      isOnline: true,
-                      role: 'user',
-                      nationality: 'NG'),
-                  'targetUser': UserModel(
-                      userId: '123',
-                      userName: 'Educational Consult',
-                      userEmail: 'a@g',
-                      phoneNumber: '1',
-                      gender: 'Male',
-                      firstName: 'Omo',
-                      lastName: 'Lola',
-                      amount: '123',
-                      userDpUrl: 'assets/icons/support.png',
-                      password: '123',
-                      isOnline: true,
-                      role: 'user',
-                      nationality: 'NG'),
-                  'reason': 'formA'
-                },
-              ),
-            ),
+                text: 'Educational Consult',
+                icon: MdiIcons.schoolOutline,
+                destination: () {}),
             MoreCard(
-              text: 'Accomodation Request',
-              icon: MdiIcons.homeCityOutline,
-              destination: () => Navigator.pushNamed(
-                context,
-                '/user/side-bar/get-to-work',
-                arguments: {
-                  'userModel': UserModel(
-                      userId: '123',
-                      userName: 'Omolola',
-                      userEmail: 'a@g',
-                      phoneNumber: '1',
-                      gender: 'Male',
-                      firstName: 'Omo',
-                      lastName: 'Lola',
-                      amount: '123',
-                      userDpUrl: 'assets/images/Account Owner.png',
-                      password: '123',
-                      isOnline: true,
-                      role: 'user',
-                      nationality: 'NG'),
-                  'targetUser': UserModel(
-                      userId: '123',
-                      userName: 'Accomondation Request',
-                      userEmail: 'a@g',
-                      phoneNumber: '1',
-                      gender: 'Male',
-                      firstName: 'Omo',
-                      lastName: 'Lola',
-                      amount: '123',
-                      userDpUrl: 'assets/icons/support.png',
-                      password: '123',
-                      isOnline: true,
-                      role: 'user',
-                      nationality: 'NG'),
-                  'reason': 'formA'
-                },
-              ),
-            ),
+                text: 'Accomodation Request',
+                icon: MdiIcons.homeCityOutline,
+                destination: () {}),
             MoreCard(
-              text: 'Advert Placement',
-              icon: MdiIcons.speakerWireless,
-              destination: () => Navigator.pushNamed(
-                context,
-                '/user/side-bar/get-to-work',
-                arguments: {
-                  'userModel': UserModel(
-                      userId: '123',
-                      userName: 'Omolola',
-                      userEmail: 'a@g',
-                      phoneNumber: '1',
-                      gender: 'Male',
-                      firstName: 'Omo',
-                      lastName: 'Lola',
-                      amount: '123',
-                      userDpUrl: 'assets/images/Account Owner.png',
-                      password: '123',
-                      isOnline: true,
-                      role: 'user',
-                      nationality: 'NG'),
-                  'targetUser': UserModel(
-                      userId: '123',
-                      userName: 'Advert Placement',
-                      userEmail: 'a@g',
-                      phoneNumber: '1',
-                      gender: 'Male',
-                      firstName: 'Omo',
-                      lastName: 'Lola',
-                      amount: '123',
-                      userDpUrl: 'assets/icons/support.png',
-                      password: '123',
-                      isOnline: true,
-                      role: 'user',
-                      nationality: 'NG'),
-                  'reason': 'formA'
-                },
-              ),
-            ),
+                text: 'Advert Placement',
+                icon: MdiIcons.speakerWireless,
+                destination: () {}),
             InkWell(
               onTap: () {
                 Navigator.pushNamed(context, '/super-admin/more/settings');

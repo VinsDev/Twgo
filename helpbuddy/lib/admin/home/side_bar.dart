@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:helpbuddy/constants/dimensions.dart';
-import 'package:helpbuddy/user/chat/models/user_model.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
+import '../../mymodels/myusermodels.dart';
+
 class AdminRightNavBar extends StatefulWidget {
-  const AdminRightNavBar({Key? key}) : super(key: key);
+  const AdminRightNavBar(
+      {Key? key,
+      required this.token,
+      required this.uid,
+      required this.userInfo})
+      : super(key: key);
+  final String token;
+  final int uid;
+  final UserInfo userInfo;
 
   @override
   State<AdminRightNavBar> createState() => _AdminRightNavBarState();
 }
 
 class _AdminRightNavBarState extends State<AdminRightNavBar> {
-  UserModel? userModel;
-
   @override
   void initState() {
     super.initState();
@@ -48,12 +55,12 @@ class _AdminRightNavBarState extends State<AdminRightNavBar> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Admin User',
+                      Text(widget.userInfo.info.firstName,
                           style: GoogleFonts.urbanist(
                               fontWeight: FontWeight.w600,
                               fontSize: 24 * factor,
                               color: Colors.black)),
-                      Text('Admin User',
+                      Text(widget.userInfo.info.email,
                           style: GoogleFonts.urbanist(
                               fontWeight: FontWeight.w200,
                               fontSize: 14 * factor,
@@ -74,7 +81,8 @@ class _AdminRightNavBarState extends State<AdminRightNavBar> {
           ),
           InkWell(
             onTap: () {
-              Navigator.pushNamed(context, '/admin/side-bar/messages');
+              Navigator.pushNamed(context, '/admin/side-bar/messages',
+                  arguments: {'token': widget.token, 'uid': widget.uid});
             },
             child: SideBarCard(
               text: 'Messages',
@@ -83,7 +91,8 @@ class _AdminRightNavBarState extends State<AdminRightNavBar> {
           ),
           InkWell(
             onTap: () {
-              Navigator.pushNamed(context, '/admin/notification');
+              Navigator.pushNamed(context, '/admin/notification',
+                  arguments: {'token': widget.token});
             },
             child: SideBarCard(
               text: 'Notification',
@@ -93,7 +102,8 @@ class _AdminRightNavBarState extends State<AdminRightNavBar> {
 
           InkWell(
             onTap: () {
-              Navigator.pushNamed(context, '/admin/profile');
+              Navigator.pushNamed(context, '/admin/profile',
+                  arguments: {'info': widget.userInfo});
             },
             child: SideBarCard(
               text: 'Profile',

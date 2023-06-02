@@ -1,64 +1,49 @@
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:helpbuddy/user/chat/models/user_model.dart';
-// import 'package:helpbuddy/user/state/user_state.dart';
 import 'package:helpbuddy/utils/constant/theme.dart';
 import 'package:helpbuddy/widget/button.dart';
 import 'package:helpbuddy/widget/input/outlineInput.dart';
-import 'package:helpbuddy/widget/loading.dart';
 
-import 'package:provider/provider.dart';
+import '../../../mymodels/myusermodels.dart';
+
 
 class AdminProfile extends StatefulWidget {
-  const AdminProfile({Key? key}) : super(key: key);
+  const AdminProfile({Key? key, required this.userInfo}) : super(key: key);
+
+  final UserInfo userInfo;
 
   @override
-  _AdminProfileState createState() => _AdminProfileState();
+  AdminProfileState createState() => AdminProfileState();
 }
 
-class _AdminProfileState extends State<AdminProfile> {
+class AdminProfileState extends State<AdminProfile> {
   TextEditingController? emailController;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool loginPasswordVisibility = false;
 
-  final bool _value = false;
-
-  TextEditingController? fullNameController;
+  TextEditingController? firstNameController;
   TextEditingController? lastNameController;
   TextEditingController? phoneController;
   TextEditingController? nationalityController;
   TextEditingController? genderController;
   TextEditingController? passwordController;
 
-  UserModel? userModel;
-
   @override
   void initState() {
-    // UserState userState = Provider.of<UserState>(context, listen: false);
-    userModel = UserModel(
-        userId: '123',
-        userName: 'Ore',
-        userEmail: 'abc@123.com',
-        phoneNumber: '123',
-        gender: 'Male',
-        firstName: 'Doe',
-        lastName: 'John',
-        amount: '123',
-        userDpUrl: 'assets/images/Account Owner.png',
-        password: '123',
-        isOnline: true,
-        role: 'user',
-        nationality: 'Nigerian');
     super.initState();
-    emailController = TextEditingController(text: userModel?.userEmail);
+    emailController = TextEditingController(text: widget.userInfo.info.email);
 
-    fullNameController = TextEditingController(text: userModel!.userName);
-    lastNameController = TextEditingController();
-    phoneController = TextEditingController(text: userModel?.phoneNumber);
-    nationalityController = TextEditingController(text: userModel?.nationality);
-    genderController = TextEditingController(text: userModel?.gender);
+    firstNameController =
+        TextEditingController(text: widget.userInfo.info.firstName);
+    lastNameController =
+        TextEditingController(text: widget.userInfo.info.lastName);
+    phoneController =
+        TextEditingController(text: widget.userInfo.info.phoneNumber);
+    nationalityController =
+        TextEditingController(text: widget.userInfo.info.nationality);
+    genderController = TextEditingController(text: widget.userInfo.info.gender);
     passwordController = TextEditingController();
   }
 
@@ -98,18 +83,20 @@ class _AdminProfileState extends State<AdminProfile> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      alignment: Alignment.center,
-                      width: 120,
-                      height: 120,
-                      clipBehavior: Clip.antiAlias,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                      ),
-                      child: Image.network(
-                        'https://picsum.photos/seed/205/600',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                        alignment: Alignment.center,
+                        width: 120,
+                        height: 120,
+                        clipBehavior: Clip.antiAlias,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                        ),
+                        child: const CircleAvatar(
+                          radius: 40,
+                          child: Icon(
+                            Icons.person,
+                            size: 50,
+                          ),
+                        )),
                   ],
                 ),
                 const SizedBox(
@@ -127,7 +114,7 @@ class _AdminProfileState extends State<AdminProfile> {
                   height: 10,
                 ),
                 BlackOutlineInput(
-                  controller: fullNameController,
+                  controller: firstNameController,
                 ),
                 const SizedBox(
                   height: 20,

@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:helpbuddy/api_client/api_client.dart';
 import 'package:helpbuddy/constants/dimensions.dart';
 import 'package:helpbuddy/exit_confirmation/exit_confirmation.dart';
-import 'package:helpbuddy/user/chat/models/user_model.dart';
 import 'package:helpbuddy/user/home/side_bar.dart';
 import 'package:helpbuddy/widget/button.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -53,6 +52,8 @@ class _UserDashboardState extends State<UserDashboard> {
               key: _scaffoldKey,
               drawer: UserRightNavBar(
                 userInfo: userInfo!,
+                uid: userInfo!.info.id,
+                token: widget.token,
               ), //Drawer,
               body: Container(
                 padding: EdgeInsets.all(20.0 * factor),
@@ -243,44 +244,7 @@ class _UserDashboardState extends State<UserDashboard> {
                         children: [
                           Expanded(
                               child: InkWell(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                '/user/get-help',
-                                arguments: {
-                                  'userModel': UserModel(
-                                      userId: '123',
-                                      userName: 'Omolola',
-                                      userEmail: 'a@g',
-                                      phoneNumber: '1',
-                                      gender: 'Male',
-                                      firstName: 'Omo',
-                                      lastName: 'Lola',
-                                      amount: '123',
-                                      userDpUrl:
-                                          'assets/images/Account Owner.png',
-                                      password: '123',
-                                      isOnline: true,
-                                      role: 'user',
-                                      nationality: 'NG'),
-                                  'targetUser': UserModel(
-                                      userId: '123',
-                                      userName: 'Support',
-                                      userEmail: 'a@g',
-                                      phoneNumber: '1',
-                                      gender: 'Male',
-                                      firstName: 'Omo',
-                                      lastName: 'Lola',
-                                      amount: '123',
-                                      userDpUrl: 'assets/icons/support.png',
-                                      password: '123',
-                                      isOnline: true,
-                                      role: 'user',
-                                      nationality: 'NG'),
-                                  'reason': 'support'
-                                },
-                              );
-                            },
+                            onTap: () {},
                             child: DashboardCard(
                                 color: const Color(0xffE7F7F8),
                                 firstText: '',

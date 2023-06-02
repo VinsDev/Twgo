@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:helpbuddy/user/chat/models/user_model.dart';
-import 'package:helpbuddy/user/chat/screens/chat_room.dart';
 import 'package:helpbuddy/user/profile/profile_settings.dart';
 import 'package:helpbuddy/utils/constant/theme.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -15,7 +13,6 @@ class UserMore extends StatefulWidget {
 }
 
 class _UserMoreState extends State<UserMore> {
-  UserModel? userModel;
 
   @override
   void initState() {
@@ -62,82 +59,14 @@ class _UserMoreState extends State<UserMore> {
             height: 30,
           ),
           InkWell(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChatRoom(
-                        userModel: UserModel(
-                            userId: '123',
-                            userName: 'Omolola',
-                            userEmail: 'a@g',
-                            phoneNumber: '1',
-                            gender: 'Male',
-                            firstName: 'Omo',
-                            lastName: 'Lola',
-                            amount: '123',
-                            userDpUrl: 'assets/images/Account Owner.png',
-                            password: '123',
-                            isOnline: true,
-                            role: 'user',
-                            nationality: 'NG'),
-                        targetUser: UserModel(
-                            userId: '123',
-                            userName: 'Omolola',
-                            userEmail: 'a@g',
-                            phoneNumber: '1',
-                            gender: 'Male',
-                            firstName: 'Omo',
-                            lastName: 'Lola',
-                            amount: '123',
-                            userDpUrl: 'assets/images/Account Owner.png',
-                            password: '123',
-                            isOnline: true,
-                            role: 'user',
-                            nationality: 'NG')),
-                  ));
-            },
+            onTap: () {},
             child: MoreCard(
               text: 'Educational Consult',
               icon: MdiIcons.schoolOutline,
             ),
           ),
           InkWell(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChatRoom(
-                        userModel: UserModel(
-                            userId: '123',
-                            userName: 'Omolola',
-                            userEmail: 'a@g',
-                            phoneNumber: '1',
-                            gender: 'Male',
-                            firstName: 'Omo',
-                            lastName: 'Lola',
-                            amount: '123',
-                            userDpUrl: 'assets/images/Account Owner.png',
-                            password: '123',
-                            isOnline: true,
-                            role: 'user',
-                            nationality: 'NG'),
-                        targetUser: UserModel(
-                            userId: '123',
-                            userName: 'Omolola',
-                            userEmail: 'a@g',
-                            phoneNumber: '1',
-                            gender: 'Male',
-                            firstName: 'Omo',
-                            lastName: 'Lola',
-                            amount: '123',
-                            userDpUrl: 'assets/images/Account Owner.png',
-                            password: '123',
-                            isOnline: true,
-                            role: 'user',
-                            nationality: 'NG')),
-                  ));
-            },
+            onTap: () {},
             child: MoreCard(
               text: 'Accomodation Request',
               icon: MdiIcons.homeCityOutline,
@@ -201,40 +130,8 @@ class _UserMoreState extends State<UserMore> {
           ]),
           InkWell(
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChatRoom(
-                        userModel: UserModel(
-                            userId: '123',
-                            userName: 'Omolola',
-                            userEmail: 'a@g',
-                            phoneNumber: '1',
-                            gender: 'Male',
-                            firstName: 'Omo',
-                            lastName: 'Lola',
-                            amount: '123',
-                            userDpUrl: 'assets/images/Account Owner.png',
-                            password: '123',
-                            isOnline: true,
-                            role: 'user',
-                            nationality: 'NG'),
-                        targetUser: UserModel(
-                            userId: '123',
-                            userName: 'Omolola',
-                            userEmail: 'a@g',
-                            phoneNumber: '1',
-                            gender: 'Male',
-                            firstName: 'Omo',
-                            lastName: 'Lola',
-                            amount: '123',
-                            userDpUrl: 'assets/images/Account Owner.png',
-                            password: '123',
-                            isOnline: true,
-                            role: 'user',
-                            nationality: 'NG')),
-                  ));
-            },
+  
+             },
             child: MoreCard(
               text: 'Customer Support',
               icon: MdiIcons.helpCircleOutline,

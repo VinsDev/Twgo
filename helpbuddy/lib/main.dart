@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:helpbuddy/admin/Request/request_history.dart';
-import 'package:helpbuddy/admin/admin_state.dart';
 import 'package:helpbuddy/admin/home/admin_dashboard.dart';
 import 'package:helpbuddy/admin/home/project_requests.dart';
 import 'package:helpbuddy/admin/home/view_more.dart';
@@ -30,8 +29,6 @@ import 'package:helpbuddy/super_admin/stat/message_stat.dart';
 import 'package:helpbuddy/super_admin/stat/project_stat.dart';
 import 'package:helpbuddy/super_admin/stat/transac_stat.dart';
 import 'package:helpbuddy/super_admin/stat/user_stat.dart';
-import 'package:helpbuddy/user/chat/models/user_model.dart';
-import 'package:helpbuddy/user/chat/screens/chat_room.dart';
 import 'package:helpbuddy/user/history/history.dart';
 import 'package:helpbuddy/user/home/dashboard.dart';
 import 'package:helpbuddy/user/messages/messages.dart';
@@ -41,7 +38,6 @@ import 'package:helpbuddy/user/payment/bank_state.dart';
 import 'package:helpbuddy/user/payment/make_payment.dart';
 import 'package:helpbuddy/user/profile/profile.dart';
 import 'package:helpbuddy/user/project/project.dart';
-import 'package:helpbuddy/user/state/user_state.dart';
 import 'package:provider/provider.dart';
 
 import 'authentications/logins/admin_login.dart';
@@ -65,14 +61,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<UserState>(
-          create: (BuildContext context) => UserState(),
-        ),
         ChangeNotifierProvider<BankState>(
           create: (BuildContext context) => BankState(),
-        ),
-        ChangeNotifierProvider<AdminState>(
-          create: (BuildContext context) => AdminState(),
         ),
       ],
       child: MaterialApp(
@@ -103,25 +93,24 @@ class MyApp extends StatelessWidget {
           '/user/history-detail': (context) => historyDetails(context),
           '/user/more': (context) => const UserMore(),
           '/user/project': (context) => project(context),
-          '/user/project/chat': (context) => chat(context),
-          '/user/get-help': (context) => chat(context),
-          '/user/side-bar/messages': (context) => const UserMessages(),
+          // '/user/project/chat': (context) => chat(context),
+          // '/user/get-help': (context) => chat(context),
+          // '/user/side-bar/get-to-work': (context) => chat(context),
+          '/user/side-bar/messages': (context) => userMessages(context),
           '/user/side-bar/notification': (context) => notifications(context),
-          '/user/side-bar/formA': (context) => chat(context),
-          '/user/side-bar/get-to-work': (context) => chat(context),
           '/user/side-bar/profile': (context) => prof(context),
 
           // Admin Routes ...
           '/admin/dashboard': (context) => dashA(context),
           '/admin/notification': (context) => notificationsA(context),
-          '/admin/profile': (context) => const AdminProfile(),
+          '/admin/profile': (context) => profA(context),
           '/admin/project-requests': (context) => projectRequests(context),
           '/admin/history': (context) => const RequestHistory(),
           '/admin/reviews': (context) => const Reviews(),
           '/admin/more': (context) => const ViewMore(),
-          '/admin/side-bar/messages': (context) => const AdminMessages(),
+          '/admin/side-bar/messages': (context) => adminMessages(context),
           '/admin/side-bar/notification': (context) => notificationsA(context),
-          '/admin/side-bar/profile': (context) => const AdminProfile(),
+          '/admin/side-bar/profile': (context) => profA(context),
 
           // Super Admin Routes ...
           '/super-admin/dashboard': (context) => dashSA(context),
@@ -149,6 +138,42 @@ class MyApp extends StatelessWidget {
   }
 }
 
+Widget userMessages(BuildContext ctx) {
+  return Builder(
+    builder: (context) {
+      // Extract the required parameters from the route settings arguments
+      final args =
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      final token = args['token'] as String;
+      final uid = args['uid'] as int;
+
+      // Return the ChatRoom widget with the required parameters
+      return UserMessages(
+        token: token,
+        uid: uid,
+      );
+    },
+  );
+}
+
+Widget adminMessages(BuildContext ctx) {
+  return Builder(
+    builder: (context) {
+      // Extract the required parameters from the route settings arguments
+      final args =
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      final token = args['token'] as String;
+      final uid = args['uid'] as int;
+
+      // Return the ChatRoom widget with the required parameters
+      return AdminMessages(
+        token: token,
+        uid: uid,
+      );
+    },
+  );
+}
+
 Widget notifications(BuildContext ctx) {
   return Builder(
     builder: (context) {
@@ -173,26 +198,6 @@ Widget notificationsA(BuildContext ctx) {
 
       // Return the ChatRoom widget with the required parameters
       return UserNotification(token: token);
-    },
-  );
-}
-
-Widget chat(BuildContext ctx) {
-  return Builder(
-    builder: (context) {
-      // Extract the required parameters from the route settings arguments
-      final args =
-          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-      final userModel = args['userModel'] as UserModel;
-      final targetUser = args['targetUser'] as UserModel;
-      final reason = args['reason'] as String?;
-
-      // Return the ChatRoom widget with the required parameters
-      return ChatRoom(
-        userModel: userModel,
-        targetUser: targetUser,
-        reason: reason,
-      );
     },
   );
 }
@@ -233,7 +238,7 @@ Widget projectRequests(BuildContext ctx) {
       final args =
           ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
       final token = args['token'] as String;
-      final uid = args['uid'] as String;
+      final uid = args['uid'] as int;
 
       // Return the ChatRoom widget with the required parameters
       return ProjectRequests(token: token, uid: uid);
@@ -293,6 +298,20 @@ Widget prof(BuildContext ctx) {
 
       // Return the ChatRoom widget with the required parameters
       return UserProfile(userInfo: info);
+    },
+  );
+}
+
+Widget profA(BuildContext ctx) {
+  return Builder(
+    builder: (context) {
+      // Extract the required parameters from the route settings arguments
+      final args =
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      final info = args['info'] as UserInfo;
+
+      // Return the ChatRoom widget with the required parameters
+      return AdminProfile(userInfo: info);
     },
   );
 }

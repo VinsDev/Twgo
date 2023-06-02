@@ -26,6 +26,7 @@ class _SuperAdminLoginState extends State<SuperAdminLogin> {
   final GlobalKey<FormState> _formKey1 = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
 
+  bool sending = false;
   bool loginPasswordVisibility = false;
   @override
   void initState() {
@@ -227,46 +228,52 @@ class _SuperAdminLoginState extends State<SuperAdminLogin> {
                       Expanded(child: Container()),
                       Column(
                         children: [
-                          Button(
-                              text: 'Login',
-                              onTap: () async {
-                                // Validate both form fields
-                                bool isFormValid =
-                                    _formKey1.currentState!.validate() &&
-                                        _formKey2.currentState!.validate();
+                          sending
+                              ? const Center(child: CircularProgressIndicator())
+                              : Button(
+                                  text: 'Login',
+                                  onTap: () async {
+                                    // Validate both form fields
+                                    bool isFormValid =
+                                        _formKey1.currentState!.validate() &&
+                                            _formKey2.currentState!.validate();
 
-                                if (!isFormValid) {
-                                  setState(() {
-                                    _formKey1.currentState!.validate();
-                                    _formKey2.currentState!.validate();
-                                  });
-                                } else {
-                                  verifyLogins(emailController.text,
-                                          passwordController.text)
-                                      .then((response) {
-                                    if (response is num) {
-                                      showSnackBar(context,
-                                          "Invalid login credentials used. Try again");
+                                    if (!isFormValid) {
+                                      setState(() {
+                                        _formKey1.currentState!.validate();
+                                        _formKey2.currentState!.validate();
+                                      });
                                     } else {
-                                      if (response['success']) {
-                                        showSuccessSnackBar(
-                                            context, "Login success");
-                                        Future.delayed(
-                                            const Duration(seconds: 2), () {
-                                          Navigator.pushReplacementNamed(
-                                              context, '/super-admin/dashboard',
-                                              arguments: {
-                                                "token": response['token']
-                                              });
-                                        });
-                                      } else {
-                                        showSnackBar(context,
-                                            "Wrong email or password used. Please try again");
-                                      }
+                                      setState(() {
+                                        sending = true;
+                                      });
+                                      verifyLogins(emailController.text,
+                                              passwordController.text)
+                                          .then((response) {
+                                        if (response is num) {
+                                          showSnackBar(context,
+                                              "Invalid login credentials used. Try again");
+                                        } else {
+                                          if (response['success']) {
+                                            showSuccessSnackBar(
+                                                context, "Login success");
+                                            Future.delayed(
+                                                const Duration(seconds: 2), () {
+                                              Navigator.pushReplacementNamed(
+                                                  context,
+                                                  '/super-admin/dashboard',
+                                                  arguments: {
+                                                    "token": response['token']
+                                                  });
+                                            });
+                                          } else {
+                                            showSnackBar(context,
+                                                "Wrong email or password used. Please try again");
+                                          }
+                                        }
+                                      });
                                     }
-                                  });
-                                }
-                              }),
+                                  }),
                         ],
                       )
                     ],
