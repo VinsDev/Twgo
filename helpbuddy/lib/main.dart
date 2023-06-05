@@ -92,11 +92,8 @@ class MyApp extends StatelessWidget {
           '/user/add-balance/make-payment': (context) => const MakePayments(),
           '/user/history': (context) => history(context),
           '/user/history-detail': (context) => historyDetails(context),
-          '/user/more': (context) => const UserMore(),
+          '/user/more': (context) => userMore(context),
           '/user/project': (context) => project(context),
-          // '/user/project/chat': (context) => chat(context),
-          // '/user/get-help': (context) => chat(context),
-          // '/user/side-bar/get-to-work': (context) => chat(context),
           '/user/side-bar/messages': (context) => userMessages(context),
           '/user/side-bar/notification': (context) => notifications(context),
           '/user/side-bar/profile': (context) => prof(context),
@@ -106,9 +103,9 @@ class MyApp extends StatelessWidget {
           '/admin/notification': (context) => notificationsA(context),
           '/admin/profile': (context) => profA(context),
           '/admin/project-requests': (context) => projectRequests(context),
-          '/admin/history': (context) => const RequestHistory(),
+          '/admin/history': (context) => requestHistory(context),
           '/admin/reviews': (context) => const Reviews(),
-          '/admin/more': (context) => const ViewMore(),
+          '/admin/more': (context) => viewMore(context),
           '/admin/side-bar/messages': (context) => adminMessages(context),
           '/admin/side-bar/notification': (context) => notificationsA(context),
           '/admin/side-bar/profile': (context) => profA(context),
@@ -129,7 +126,7 @@ class MyApp extends StatelessWidget {
           '/super-admin/stats': (context) => const AdminStat(),
           '/super-admin/user-stats': (context) => const UserStat(),
           '/super-admin/all-stats': (context) => const AllStat(),
-          '/super-admin/more': (context) => const SuperAdminMore(),
+          '/super-admin/more': (context) => superMore(context),
           '/super-admin/more/advert': (context) => const AdvertPlacement(),
           '/super-admin/more/settings': (context) => const SuperAdminSettings(),
           '/super-admin/side-bar/messages': (context) =>
@@ -138,6 +135,76 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget requestHistory(BuildContext ctx) {
+  return Builder(
+    builder: (context) {
+      // Extract the required parameters from the route settings arguments
+      final args =
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      final token = args['token'] as String;
+
+      // Return the ChatRoom widget with the required parameters
+      return RequestHistory(
+        token: token,
+      );
+    },
+  );
+}
+
+Widget superMore(BuildContext ctx) {
+  return Builder(
+    builder: (context) {
+      // Extract the required parameters from the route settings arguments
+      final args =
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      final info = args['info'] as UserInfo;
+      final token = args['token'] as String;
+
+      // Return the ChatRoom widget with the required parameters
+      return SuperAdminMore(
+        userInfo: info,
+        token: token,
+      );
+    },
+  );
+}
+
+Widget viewMore(BuildContext ctx) {
+  return Builder(
+    builder: (context) {
+      // Extract the required parameters from the route settings arguments
+      final args =
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      final info = args['info'] as UserInfo;
+      final token = args['token'] as String;
+
+      // Return the ChatRoom widget with the required parameters
+      return ViewMore(
+        userInfo: info,
+        token: token,
+      );
+    },
+  );
+}
+
+Widget userMore(BuildContext ctx) {
+  return Builder(
+    builder: (context) {
+      // Extract the required parameters from the route settings arguments
+      final args =
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      final info = args['info'] as UserInfo;
+      final token = args['token'] as String;
+
+      // Return the ChatRoom widget with the required parameters
+      return UserMore(
+        userInfo: info,
+        token: token,
+      );
+    },
+  );
 }
 
 Widget userMessages(BuildContext ctx) {

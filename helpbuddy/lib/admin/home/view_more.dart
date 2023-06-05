@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:helpbuddy/admin/more/profile/profile_settings.dart';
-import 'package:helpbuddy/authentications/logins/admin_login.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
+import '../../mymodels/myusermodels.dart';
+
 class ViewMore extends StatelessWidget {
-  const ViewMore({super.key});
+  const ViewMore({Key? key, required this.userInfo, required this.token})
+      : super(key: key);
+
+  final UserInfo userInfo;
+  final String token;
 
   @override
   Widget build(BuildContext context) {
@@ -71,16 +76,16 @@ class ViewMore extends StatelessWidget {
           const SizedBox(
             height: 20,
           ),
-          const Text('OreAdeminyi',
-              style: TextStyle(
+          Text("${userInfo.info.firstName} ${userInfo.info.lastName}",
+              style: const TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w500,
                   color: Color.fromARGB(255, 49, 49, 49))),
           const SizedBox(
             height: 10,
           ),
-          const Text('contact@oreademinyi.com',
-              style: TextStyle(
+          Text(userInfo.info.email,
+              style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                   color: Color.fromARGB(255, 131, 131, 131))),
@@ -93,12 +98,13 @@ class ViewMore extends StatelessWidget {
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               InkWell(
                 onTap: () {
-                    Navigator.push(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            const ProjectSettings()),
-                  ); 
+                        builder: (BuildContext context) => ProjectSettings(
+                              userInfo: userInfo,
+                            )),
+                  );
                 },
                 child: MoreCard(
                   text: 'Account Security',

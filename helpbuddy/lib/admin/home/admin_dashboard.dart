@@ -172,7 +172,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
                             Expanded(
                                 child: InkWell(
                               onTap: () {
-                                Navigator.pushNamed(context, '/admin/history');
+                                Navigator.pushNamed(context, '/admin/history',
+                                    arguments: {'token': widget.token});
                               },
                               child: DashboardCard(
                                   color: const Color(0xffFFEBEB),
@@ -206,7 +207,11 @@ class _AdminDashboardState extends State<AdminDashboard> {
                             Expanded(
                               child: InkWell(
                                 onTap: () {
-                                  Navigator.pushNamed(context, '/admin/more');
+                                  Navigator.pushNamed(context, '/admin/more',
+                                      arguments: {
+                                        'token': widget.token,
+                                        'info': userInfo
+                                      });
                                 },
                                 child: DashboardCard(
                                     color: const Color(0xffE0D9F7),

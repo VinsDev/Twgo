@@ -274,7 +274,11 @@ class _UserDashboardState extends State<UserDashboard> {
                           Expanded(
                               child: InkWell(
                             onTap: () {
-                              Navigator.pushNamed(context, '/user/more');
+                              Navigator.pushNamed(context, '/user/more',
+                                  arguments: {
+                                    'info': userInfo,
+                                    'token': widget.token
+                                  });
                             },
                             child: DashboardCard(
                                 color: const Color(0xffE0D9F7),

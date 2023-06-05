@@ -4,10 +4,16 @@ import 'package:helpbuddy/user/profile/profile_settings.dart';
 import 'package:helpbuddy/utils/constant/theme.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import '../../api_client/api_client.dart';
+import '../../mymodels/myusermodels.dart';
+import '../chat/screens/chat_room.dart';
 
 class UserMore extends StatefulWidget {
-  const UserMore({Key? key}) : super(key: key);
+  const UserMore({Key? key, required this.userInfo, required this.token})
+      : super(key: key);
 
+  final UserInfo userInfo;
+  final String token;
   @override
   State<UserMore> createState() => _UserMoreState();
 }
@@ -52,21 +58,50 @@ class _UserMoreState extends State<UserMore> {
               width: 40,
             ),
           ),
-          Text('Ore Ademiniyi', style: ConstantTheme().bigBlueStyle),
-          Text('contact @ oreademiniyi.com',
-              style: ConstantTheme().defaultStyle),
+          Text(
+              "${widget.userInfo.info.firstName} ${widget.userInfo.info.lastName}",
+              style: ConstantTheme().bigBlueStyle),
+          Text(widget.userInfo.info.email, style: ConstantTheme().defaultStyle),
           const SizedBox(
             height: 30,
           ),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              getEduConversationId(widget.token).then((response) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatRoom(
+                        userId: widget.userInfo.info.id,
+                        partnerName: "Education Consult",
+                        conversationId: response['conversation_id'],
+                        token: widget.token,
+                        support: true,
+                      ),
+                    ));
+              });
+            },
             child: MoreCard(
               text: 'Educational Consult',
               icon: MdiIcons.schoolOutline,
             ),
           ),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              getAccomondationConversationId(widget.token).then((response) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatRoom(
+                        userId: widget.userInfo.info.id,
+                        partnerName: "Accomondation Request",
+                        conversationId: response['conversation_id'],
+                        token: widget.token,
+                        support: true,
+                      ),
+                    ));
+              });
+            },
             child: MoreCard(
               text: 'Accomodation Request',
               icon: MdiIcons.homeCityOutline,
@@ -77,7 +112,9 @@ class _UserMoreState extends State<UserMore> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (BuildContext context) => const ProjectSettings()),
+                    builder: (BuildContext context) => ProjectSettings(
+                          userInfo: widget.userInfo,
+                        )),
               );
             },
             child: MoreCard(
@@ -91,8 +128,9 @@ class _UserMoreState extends State<UserMore> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          const ProjectSettings()),
+                      builder: (BuildContext context) => ProjectSettings(
+                            userInfo: widget.userInfo,
+                          )),
                 );
               },
               child: MoreCard(
@@ -129,7 +167,21 @@ class _UserMoreState extends State<UserMore> {
             ),
           ]),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              getSupportConversationId(widget.token).then((response) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatRoom(
+                        userId: widget.userInfo.info.id,
+                        partnerName: "Customer Support",
+                        conversationId: response['conversation_id'],
+                        token: widget.token,
+                        support: true,
+                      ),
+                    ));
+              });
+            },
             child: MoreCard(
               text: 'Customer Support',
               icon: MdiIcons.helpCircleOutline,
@@ -221,4 +273,22 @@ class LogoutCard extends StatelessWidget {
       ],
     );
   }
+}
+
+getSupportConversationId(String token) async {
+  final response =
+      await ApiClient(authToken: token).post('support-conversation', {});
+  return response;
+}
+
+getEduConversationId(String token) async {
+  final response =
+      await ApiClient(authToken: token).post('edu-consult-conversation', {});
+  return response;
+}
+
+getAccomondationConversationId(String token) async {
+  final response = await ApiClient(authToken: token)
+      .post('accomondation-request-conversation', {});
+  return response;
 }

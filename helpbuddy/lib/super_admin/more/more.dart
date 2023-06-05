@@ -3,16 +3,21 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:helpbuddy/utils/constant/theme.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
+import '../../mymodels/myusermodels.dart';
+import '../../user/profile/profile_settings.dart';
+
 class SuperAdminMore extends StatefulWidget {
-  const SuperAdminMore({Key? key}) : super(key: key);
+  const SuperAdminMore({Key? key, required this.userInfo, required this.token})
+      : super(key: key);
+
+  final UserInfo userInfo;
+  final String token;
 
   @override
   State<SuperAdminMore> createState() => _SuperAdminMoreState();
 }
 
 class _SuperAdminMoreState extends State<SuperAdminMore> {
- 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,8 +77,10 @@ class _SuperAdminMoreState extends State<SuperAdminMore> {
             const SizedBox(
               height: 10,
             ),
-            Text('Ore Ademiniyi', style: ConstantTheme().bigBlueStyle),
-            Text('contact @ oreademiniyi.com',
+            Text(
+                "${widget.userInfo.info.firstName} ${widget.userInfo.info.lastName}",
+                style: ConstantTheme().bigBlueStyle),
+            Text(widget.userInfo.info.email,
                 style: ConstantTheme().defaultStyle),
             const SizedBox(
               height: 30,
@@ -81,18 +88,39 @@ class _SuperAdminMoreState extends State<SuperAdminMore> {
             MoreCard(
                 text: 'Educational Consult',
                 icon: MdiIcons.schoolOutline,
-                destination: () {}),
+                destination: () {
+                  Navigator.pushNamed(context, '/super-admin/side-bar/messages',
+                      arguments: {
+                        'token': widget.token,
+                        'uid': widget.userInfo.info.id
+                      });
+                }),
             MoreCard(
                 text: 'Accomodation Request',
                 icon: MdiIcons.homeCityOutline,
-                destination: () {}),
+                destination: () {
+                  Navigator.pushNamed(context, '/super-admin/side-bar/messages',
+                      arguments: {
+                        'token': widget.token,
+                        'uid': widget.userInfo.info.id
+                      });
+                }),
             MoreCard(
                 text: 'Advert Placement',
                 icon: MdiIcons.speakerWireless,
-                destination: () {}),
+                destination: () {
+                  Navigator.pushNamed(context, '/super-admin/more/advert');
+                }),
             InkWell(
               onTap: () {
-                Navigator.pushNamed(context, '/super-admin/more/settings');
+                // Navigator.pushNamed(context, '/super-admin/more/settings');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => ProjectSettings(
+                            userInfo: widget.userInfo,
+                          )),
+                );
               },
               child: Container(
                 margin: const EdgeInsets.symmetric(vertical: 6),

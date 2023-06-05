@@ -99,7 +99,11 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                                 InkWell(
                                     onTap: () {
                                       Navigator.pushNamed(
-                                          context, '/super-admin/more');
+                                          context, '/super-admin/more',
+                                          arguments: {
+                                            'token': widget.token,
+                                            'info': userInfo
+                                          });
                                     },
                                     child: Image.asset(
                                         'assets/images/Account Owner.png'))
@@ -270,7 +274,10 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                                 child: InkWell(
                               onTap: () {
                                 Navigator.pushNamed(
-                                    context, '/super-admin/more');
+                                    context, '/super-admin/more', arguments: {
+                                  'token': widget.token,
+                                  'info': userInfo
+                                });
                               },
                               child: DashboardCard(
                                   color: const Color(0xffE0D9F7),

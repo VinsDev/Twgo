@@ -165,6 +165,9 @@ class UserProfileState extends State<UserProfile> {
                 ),
                 BlackOutlineInput(
                   controller: emailController,
+                  onTap: () {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                  },
                 ),
                 const SizedBox(
                   height: 20,
@@ -311,68 +314,6 @@ class UserProfileState extends State<UserProfile> {
                 const SizedBox(
                   height: 20,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text('Password',
-                        textAlign: TextAlign.start,
-                        style: ConstantTheme().defaultStyle),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                TextFormField(
-                    validator: (String? amountController) {
-                      if (amountController!.isEmpty) {
-                        return 'Password box is Empty';
-                      }
-                      return null;
-                    },
-                    controller: passwordController,
-                    obscureText: !loginPasswordVisibility,
-                    decoration: InputDecoration(
-                      enabledBorder: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12)),
-                        borderSide: BorderSide(
-                          color: Color(0xffC4C4C5),
-                        ),
-                      ),
-                      focusedBorder: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12)),
-                        borderSide: BorderSide(
-                          color: Color(0xffC4C4C5),
-                        ),
-                      ),
-                      errorBorder: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12)),
-                        borderSide: BorderSide(
-                          color: Color(0xffC4C4C5),
-                        ),
-                      ),
-                      focusedErrorBorder: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12)),
-                        borderSide: BorderSide(
-                          color: Color(0xffC4C4C5),
-                        ),
-                      ),
-                      suffixIcon: InkWell(
-                        onTap: () => setState(
-                          () => loginPasswordVisibility =
-                              !loginPasswordVisibility,
-                        ),
-                        child: Icon(
-                          loginPasswordVisibility
-                              ? Icons.visibility_outlined
-                              : Icons.visibility_off_outlined,
-                          color: Colors.black,
-                          size: 22,
-                        ),
-                      ),
-                    )),
-                const SizedBox(
-                  height: 30,
-                ),
                 const SizedBox(
                   height: 30,
                 ),
@@ -387,23 +328,4 @@ class UserProfileState extends State<UserProfile> {
       ),
     );
   }
-
-  //   void Resendpin() async {
-  //   Loading(context);
-  //   HttpRequest('/email-verification',
-  //   shouldPopOnError: false,
-  //       context: context,
-  //       body: {'email': widget.email}, onSuccess: (_, result) {
-  //     Navigator.pop(context);
-  //     successfulshowSnackbar(context, 'Sent');
-  //   }, onFailure: (_, result) {
-  //     Navigator.pop(context);
-  //     showSnackbar(context, result['message']);
-  //     return null;
-  //   }, headers: {
-  //     'Content-Type': 'application/json',
-  //     'Accept': 'application/json',
-  //     'Authorization': 'Bearer ${token.toString()}'
-  //   }).send();
-  // }
 }

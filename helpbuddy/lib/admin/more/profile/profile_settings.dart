@@ -4,8 +4,13 @@ import 'package:helpbuddy/admin/more/profile/transaction_pin.dart';
 import 'package:helpbuddy/utils/constant/theme.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
+import '../../../mymodels/myusermodels.dart';
+
+
 class ProjectSettings extends StatefulWidget {
-  const ProjectSettings({Key? key}) : super(key: key);
+  const ProjectSettings({Key? key, required this.userInfo}) : super(key: key);
+
+  final UserInfo userInfo;
 
   @override
   State<ProjectSettings> createState() => _ProjectSettingsState();
@@ -40,15 +45,17 @@ class _ProjectSettingsState extends State<ProjectSettings> {
           ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: Image.asset('assets/images/Account Owner.png')),
-          Text('Ore Ademiniyi', style: ConstantTheme().bigBlueStyle),
-          Text('contact @ oreademiniyi.com',
-              style: ConstantTheme().defaultStyle),
+          Text(
+              "${widget.userInfo.info.firstName} ${widget.userInfo.info.lastName}",
+              style: ConstantTheme().bigBlueStyle),
+          Text(widget.userInfo.info.email, style: ConstantTheme().defaultStyle),
           const SizedBox(
             height: 30,
           ),
           InkWell(
             onTap: () {
-              Navigator.pushReplacementNamed(context, '/admin/profile');
+              Navigator.pushNamed(context, '/user/profile',
+                  arguments: {'info': widget.userInfo});
             },
             child: MoreCard(
               text: 'Update Profile',

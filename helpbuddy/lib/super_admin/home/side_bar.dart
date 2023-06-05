@@ -106,7 +106,7 @@ class _RightNavBarState extends State<RightNavBar> {
                   iconImage: 'assets/sidebar_svgs/messages.png',
                 ),
               ),
-              InkWell(
+              /*  InkWell(
                 onTap: () {},
                 child: const SideBarCard2(
                     iconImage: Icons.school, text: 'Educational Consults'),
@@ -114,7 +114,7 @@ class _RightNavBarState extends State<RightNavBar> {
               InkWell(
                   onTap: () {},
                   child: const SideBarCard2(
-                      iconImage: Icons.house, text: 'Accommodation')),
+                      iconImage: Icons.house, text: 'Accommodation')), */
               InkWell(
                   onTap: () =>
                       Navigator.pushNamed(context, '/super-admin/more/advert'),
@@ -164,7 +164,7 @@ class _RightNavBarState extends State<RightNavBar> {
           ),
         ),
         const SizedBox(
-          height: 8,
+          height: 20,
         ),
       ]),
     );

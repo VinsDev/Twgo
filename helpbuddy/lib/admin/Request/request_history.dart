@@ -1,14 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../api_client/api_client.dart';
+import '../../mymodels/myusermodels.dart';
+
 class RequestHistory extends StatefulWidget {
-  const RequestHistory({Key? key}) : super(key: key);
+  const RequestHistory({Key? key, required this.token}) : super(key: key);
+  final String token;
 
   @override
   State<RequestHistory> createState() => _RequestHistoryState();
 }
 
 class _RequestHistoryState extends State<RequestHistory> {
+  List<Project> projectsList = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchProjects(widget.token).then((response) {
+      setState(() {
+        projectsList = response.map((json) => Project.fromJson(json)).toList();
+        isLoading = false;
+      });
+    }).catchError((error) {
+      setState(() {
+        isLoading = false;
+      });
+      // Handle the error here, e.g., show an error message
+      print('Error fetching projects: $error');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,20 +133,22 @@ class _RequestHistoryState extends State<RequestHistory> {
                     ],
                   ),
                   Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: const [
-                          RequestCard(),
-                          RequestCard(),
-                          RequestCard(),
-                          RequestCard(),
-                          RequestCard(),
-                          RequestCard(),
-                          RequestCard(),
-                          RequestCard(),
-                        ],
-                      ),
-                    ),
+                    child: isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : projectsList.isEmpty
+                            ? const Center(
+                                child: Text('No accepted projects found'),
+                              )
+                            : ListView.builder(
+                                padding: const EdgeInsets.only(top: 20),
+                                itemCount: projectsList.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return RequestCard(
+                                    item: projectsList[index],
+                                    token: widget.token,
+                                  );
+                                },
+                              ),
                   )
                 ],
               ),
@@ -133,12 +159,15 @@ class _RequestHistoryState extends State<RequestHistory> {
 }
 
 class RequestCard extends StatelessWidget {
-  const RequestCard({Key? key}) : super(key: key);
+  const RequestCard({Key? key, required this.item, required this.token})
+      : super(key: key);
+  final Project item;
+  final String token;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -167,15 +196,15 @@ class RequestCard extends StatelessWidget {
               Text('You started a project',
                   style: GoogleFonts.urbanist(
                       fontWeight: FontWeight.w700,
-                      fontSize: 12,
+                      fontSize: 13,
                       color: Colors.black)),
               const SizedBox(
                 height: 2,
               ),
-              Text('Twgo Wallet Balance',
+              Text('Budget',
                   style: GoogleFonts.urbanist(
                       fontWeight: FontWeight.w600,
-                      fontSize: 11,
+                      fontSize: 11.5,
                       color: Color.fromARGB(255, 141, 141, 141))),
               const SizedBox(
                 height: 2,
@@ -183,14 +212,15 @@ class RequestCard extends StatelessWidget {
               Text('Status',
                   style: GoogleFonts.urbanist(
                       fontWeight: FontWeight.w600,
-                      fontSize: 13,
+                      fontSize: 14,
                       color: const Color(0xff686868))),
             ],
           ),
+          Expanded(child: Container()),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text('£1000',
+              Text(item.deliveryDate,
                   style: GoogleFonts.urbanist(
                       fontWeight: FontWeight.w600,
                       fontSize: 16,
@@ -198,7 +228,7 @@ class RequestCard extends StatelessWidget {
               const SizedBox(
                 height: 2,
               ),
-              Text('Mar 01 15:30',
+              Text(item.serviceType,
                   style: GoogleFonts.urbanist(
                       fontWeight: FontWeight.w600,
                       fontSize: 12,
@@ -206,7 +236,9 @@ class RequestCard extends StatelessWidget {
               const SizedBox(
                 height: 2,
               ),
-              Text('Transaction successful',
+              Text(
+                  item.status.substring(0, 1).toUpperCase() +
+                      item.status.substring(1),
                   style: GoogleFonts.urbanist(
                       fontWeight: FontWeight.w600,
                       fontSize: 12,
@@ -217,4 +249,9 @@ class RequestCard extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<List<dynamic>> fetchProjects(String token) async {
+  final response = await ApiClient(authToken: token).get('projects/admin');
+  return response;
 }

@@ -22,6 +22,7 @@ class UserRightNavBar extends StatefulWidget {
 }
 
 class _UserRightNavBarState extends State<UserRightNavBar> {
+  bool loading = false;
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -100,7 +101,13 @@ class _UserRightNavBarState extends State<UserRightNavBar> {
 
           InkWell(
               onTap: () {
+                setState(() {
+                  loading = true;
+                });
                 getWorkConversationId(widget.token).then((response) {
+                  setState(() {
+                    loading = false;
+                  });
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -114,10 +121,14 @@ class _UserRightNavBarState extends State<UserRightNavBar> {
                       ));
                 });
               },
-              child: SideBarCard(
-                text: 'Get Work',
-                iconImage: 'assets/sidebar_svgs/briefcase.png',
-              )),
+              child: loading
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : SideBarCard(
+                      text: 'Get Work',
+                      iconImage: 'assets/sidebar_svgs/briefcase.png',
+                    )),
           InkWell(
               onTap: () {
                 Navigator.pushNamed(context, '/user/side-bar/profile',
